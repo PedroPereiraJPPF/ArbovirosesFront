@@ -1,4 +1,4 @@
-export async function fetchApi(uri: string)
+async function fetchApi(uri: string)
 {
     try {
         const baseApi = process.env.REACT_APP_API_URL ?? ""
@@ -8,4 +8,16 @@ export async function fetchApi(uri: string)
     } catch (error) {
         throw error
     }
+}
+
+export default async function getApiData(uri: string)
+{
+  try {
+    const response = await fetchApi(uri)
+    const data = await response.json()
+  
+    return data.data
+  } catch (error) {
+    console.log(error)
+  }
 }
