@@ -1,8 +1,8 @@
 import { ApexOptions } from "apexcharts";
 import getApiData from "../api/fetchApiData";
 
-export async function mountAgravoLineData(setAgravoLineSeries: Function) {
-    const apiData = await getApiData('/notifications/count/epidemiologicalWeek')
+export async function mountAgravoLineData(setAgravoLineSeries: Function, yearSelected: string) {
+    const apiData = await getApiData(`/notifications/count/epidemiologicalWeek?year=${yearSelected}`)
 
     const dengueData = apiData.dengue.map((data: any) => {
       return data.casesCount

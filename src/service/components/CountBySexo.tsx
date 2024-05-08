@@ -1,8 +1,8 @@
 import { ApexOptions } from "apexcharts";
 import getApiData from "../api/fetchApiData";
 
-export async function mountDonutCountBySexo(setCountBySexoSeries: Function) {
-    const apiData = await getApiData('/notifications/count/sexo')
+export async function mountDonutCountBySexo(setCountBySexoSeries: Function, yearSelected: string) {
+    const apiData = await getApiData(`/notifications/count/sexo?year=${yearSelected}`)
     
     setCountBySexoSeries([apiData.masculine, apiData.feminine]);
   }

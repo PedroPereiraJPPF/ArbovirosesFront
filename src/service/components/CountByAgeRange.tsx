@@ -1,8 +1,8 @@
 import { ApexOptions } from "apexcharts";
 import getApiData from "../api/fetchApiData";
 
-export async function mountColumnCountByAgeRange(setAgeRangeCategories: Function) {
-    const apiData = await getApiData('/notifications/count/ageRange');
+export async function mountColumnCountByAgeRange(setAgeRangeCategories: Function, yearSelected: string) {
+    const apiData = await getApiData(`/notifications/count/ageRange?year=${yearSelected}`);
 
     const labels = apiData.labels;
     const count = apiData.count;
