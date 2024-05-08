@@ -1,8 +1,8 @@
 import { ApexOptions } from "apexcharts";
 import getApiData from "../api/fetchApiData";
 
-export async function mountAgravoLineData(setAgravoLineSeries: Function, yearSelected: string, agravoSelected: string) {
-    const apiData = await getApiData(`/notifications/count/epidemiologicalWeek?year=${yearSelected}&agravo=${agravoSelected}`)
+export async function mountAgravoLineAccumulatedData(setAgravoLineSeries: Function, yearSelected: string, agravoSelected: string) {
+    const apiData = await getApiData(`/notifications/count/epidemiologicalWeek/accumulated?year=${yearSelected}&agravo=${agravoSelected}`)
 
     const dengueData = apiData.dengue.map((data: any) => {
       return data.casesCount
@@ -31,7 +31,7 @@ export async function mountAgravoLineData(setAgravoLineSeries: Function, yearSel
   }
 
 
-export function countByEpidemiologicalWeekOptions() : ApexOptions {
+export function countByEpidemiologicalWeekAccumulatedOptions() : ApexOptions {
     const categories = Array.from({length: 53}, (_, index) => index + 1);
     
     return {
@@ -132,7 +132,7 @@ export function countByEpidemiologicalWeekOptions() : ApexOptions {
             show: false,
             },
             title: {
-            text: 'Contagem de casos por semana epidemiologica',
+            text: 'Contagem de casos por semana epidemiologica acumulado',
             style: {
                 fontSize: '16px',
             },

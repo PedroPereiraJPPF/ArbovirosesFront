@@ -1,13 +1,12 @@
 import { ApexOptions } from "apexcharts";
 import getApiData from "../api/fetchApiData";
 
-export async function mountColumnCountByAgeRange(setAgeRangeCategories: Function, yearSelected: string) {
-    const apiData = await getApiData(`/notifications/count/ageRange?year=${yearSelected}`);
+export async function mountColumnCountByAgeRange(setAgeRangeCategories: Function, yearSelected: string, agravoSelected: string) {
+    const apiData = await getApiData(`/notifications/count/ageRange?year=${yearSelected}&agravo=${agravoSelected}`);
 
-    const labels = apiData.labels;
     const count = apiData.count;
 
-    const arrayData = [count[labels[0]], count[labels[1]], count[labels[2]], count[labels[3]], count[labels[4]], count[labels[5]], count[labels[6]]];
+    const arrayData = [count['age0to10'], count['age11to20'], count['age21to30'], count['age31to40'], count['age41to50'], count['age51to60'], count['ageOver60']];
 
     setAgeRangeCategories([{
       name: "Contagem",  
