@@ -6,7 +6,7 @@ export async function mountColumnCountByAgeRange(setAgeRangeCategories: Function
 
     const count = apiData.count;
 
-    const arrayData = [count['age0to10'], count['age11to20'], count['age21to30'], count['age31to40'], count['age41to50'], count['age51to60'], count['ageOver60']];
+    const arrayData = [count['age1to10'], count['age11to20'], count['age21to30'], count['age31to40'], count['age41to50'], count['age51to60'], count['age61to70'], count['age71to80'], count['age81to90'], count['age91to99']];
 
     setAgeRangeCategories([{
       name: "Contagem",  
@@ -57,7 +57,7 @@ export function countByAgeRangeOptions(): ApexOptions {
         },
       
         xaxis: {
-          categories: ['0 - 10', '11 - 20', '21 - 30', '31 - 40', '41 - 50', '51 - 60', '> 60'],
+          categories: ['1 - 10', '11 - 20', '21 - 30', '31 - 40', '41 - 50', '51 - 60', '61 - 70', '71 - 80', '81 - 90', '91 - 99'],
         },
         legend: {
           position: 'top',

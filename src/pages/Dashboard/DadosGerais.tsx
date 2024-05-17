@@ -14,6 +14,10 @@ import AgravoAccumulatedLineChart from '../../components/Charts/AgravoAccumulate
 import { countByEpidemiologicalWeekAccumulatedOptions, mountAgravoLineAccumulatedData } from '../../service/components/EpidemiologicalWeekAccumulated';
 import { CountCard } from '../../components/Cards/CountCard';
 import { affectedNeighborhoodCount } from '../../service/components/affectedNeighborhoodCount';
+import { notificationsCountData } from '../../service/components/notificationsCount';
+import BaseTable from '../../components/Tables/BaseTable';
+import { mountNeighborhoodData } from '../../service/components/NeighborhoodInfoTable';
+import { NeighborhoodInfo } from '../../components/Entity/NeighborhoodInfo';
 
 const lineChartOptionsByEpidemiologicalWeek: ApexOptions = countByEpidemiologicalWeekOptions();
 const lineChartOptionsByEpidemiologicalWeekAccumulated: ApexOptions = countByEpidemiologicalWeekAccumulatedOptions();
@@ -26,7 +30,9 @@ const App: React.FC = () => {
   const [countBySexoSeries, setCountBySexoSeries] = useState<any>([])
   const [ageRangeCategories, setAgeRangeCategories] = useState<any>([])
   const [affectedNeighborhoods, setAffectedNeighborhoods] = useState<any>(0)
-  const [yearSelected, setYearSelected] = useState<any>(new Date().getFullYear())
+  const [notificationsCount, setNotificationsCount] = useState<any>(0)
+  const [yearSelected, setYearSelected] = useState<string>((new Date().getFullYear()).toString())
+  const [neighborhoodApiData, setNeighborhoodApiData] = useState<NeighborhoodInfo[]>([])
   const [agravoSelected, setAgravoSelected] = useState<string>('dengue')
   
   useEffect(() => {
@@ -34,7 +40,9 @@ const App: React.FC = () => {
     mountAgravoLineAccumulatedData(setAgravoLineAccumulatedSeries, yearSelected, agravoSelected);
     mountDonutCountBySexo(setCountBySexoSeries, yearSelected, agravoSelected);
     mountColumnCountByAgeRange(setAgeRangeCategories, yearSelected, agravoSelected);
+    mountNeighborhoodData(setNeighborhoodApiData, yearSelected, agravoSelected);
     affectedNeighborhoodCount(setAffectedNeighborhoods, yearSelected, agravoSelected);
+    notificationsCountData(setNotificationsCount, yearSelected, agravoSelected);
   }, [yearSelected, agravoSelected])
 
   return (
@@ -52,7 +60,7 @@ const App: React.FC = () => {
       <div className='flex flex-col md:flex-row gap-4'>
         <CountCard
           title="Notificações"
-          count={2000}
+          count={notificationsCount}
         />
         <CountCard 
           title="Bairros afetados"
@@ -89,7 +97,11 @@ const App: React.FC = () => {
             series={countBySexoSeries}
           />
         </div>
-        <MapOne />
+        <div className='xl:col-start-1 xl:col-end:13 col-span-12'>
+          <BaseTable 
+            neighborhoodData={neighborhoodApiData}
+          />
+        </div>
       </div>
     </DefaultLayout>
   );

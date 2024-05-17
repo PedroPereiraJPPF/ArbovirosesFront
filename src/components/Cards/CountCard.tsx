@@ -9,7 +9,7 @@ export const CountCard: React.FC<CountCardProps> = ({title, count}) => {
             <div className="text-2xl">
                 {title}
             </div>
-            <div className="text-4xl">
+            <div className="text-2xl">
                 {count}
             </div>
         </div>
