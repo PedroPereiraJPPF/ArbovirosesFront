@@ -9,6 +9,7 @@ import Chart from './pages/Chart';
 import DadosGerais from './pages/Dashboard/DadosGerais';
 import Alerts from './pages/UiElements/Alerts';
 import Buttons from './pages/UiElements/Buttons';
+import CarregarDados from './pages/Dashboard/CarregarDados';
 
 function App() {
   const [loading, setLoading] = useState<boolean>(true);
@@ -33,6 +34,15 @@ function App() {
             <>
               <PageTitle title="Dashboard Arboviroses" />
               <DadosGerais />
+            </>
+          }
+        />
+        <Route 
+          path="/carregarDados"
+          element={
+            <>
+              <PageTitle title="Carregar dados"/>
+              <CarregarDados />
             </>
           }
         />

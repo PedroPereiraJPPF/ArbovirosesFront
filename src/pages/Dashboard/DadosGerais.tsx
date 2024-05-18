@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import AgravoLineChart from '../../components/Charts/AgravoLineChart';
-import MapOne from '../../components/Maps/MapOne';
 import DefaultLayout from '../../layout/DefaultLayout';
 import DonutChart from '../../components/Charts/DonutChart';
 import { ApexOptions } from 'apexcharts';
