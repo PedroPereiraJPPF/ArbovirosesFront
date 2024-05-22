@@ -5,8 +5,5 @@ export async function mountNeighborhoodData(setNeighborhoodData: Function, yearS
 
     setNeighborhoodData(data)
 
-
-    console.log(data)
-
     return data
 }

@@ -1,12 +1,17 @@
 import { useState } from 'react';
 import DefaultLayout from '../../layout/DefaultLayout';
+import { SuccessModal } from '../../components/Modals/SuccessModal';
+import { useNavigate } from 'react-router-dom';
 
 const CarregarDados: React.FC = () => {
     const baseApiUrl = process.env.REACT_APP_API_URL ?? ""
+    const authToken = localStorage.getItem('accessToken') ?? ""
+    const navigate = useNavigate()
     const [file, setFile] = useState<File | null>(null);
     const [fileName, setFileName] = useState<string | null>(null);
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
     const [loadingData, setLoadingData] = useState<boolean>(false);
+    const [openSucessModal, setOpenSuccessModal] = useState<boolean>(false);
 
     function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) 
     {
@@ -14,6 +19,9 @@ const CarregarDados: React.FC = () => {
         setFile(null)
         setFileName(null)
         const uploadedFile = event.target.files?.[0];
+
+        console.log(uploadedFile)
+
         if (uploadedFile) {
             if (uploadedFile.name.split('.').pop()?.toLowerCase() !== 'csv') {
                 setErrorMessage('o arquivo precisa ser um csv')
@@ -23,6 +31,11 @@ const CarregarDados: React.FC = () => {
             setFile(uploadedFile)
             setFileName(uploadedFile.name)
         }
+    }
+
+    function handleModalClose() 
+    {
+        setOpenSuccessModal(false)
     }
 
     async function handleButtonClick() {
@@ -36,15 +49,19 @@ const CarregarDados: React.FC = () => {
       
           try {
             setLoadingData(true);
+
             const response = await fetch(baseApiUrl + '/savecsvdata', {
               method: 'POST',
               body: formData,
+              headers: {
+                'Authorization' : `Bearer ${authToken}` 
+              }
             });
       
             if (response.ok) {
               setFile(null)
               setFileName(null)
-              alert("arquivo enviado com sucesso");
+              setOpenSuccessModal(true)
             } else {
               setFile(null)
               setFileName(null)
@@ -113,6 +130,12 @@ const CarregarDados: React.FC = () => {
             </button>
            </div>
         </div>
+        <SuccessModal
+            openModal={openSucessModal}
+            handleModalClose={handleModalClose}
+            message='Arquivo carregado com sucesso!'
+            position='center'
+        />
         </DefaultLayout>
     );
 };
