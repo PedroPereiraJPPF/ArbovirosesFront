@@ -4,7 +4,7 @@ import { Route, Routes, useLocation } from 'react-router-dom';
 import Loader from './common/Loader';
 import PageTitle from './components/PageTitle';
 import SignIn from './pages/Authentication/Login';
-import SignUp from './pages/Authentication/SignUp';
+import SignUp from './pages/Authentication/Register';
 import Chart from './pages/Chart';
 import DadosGerais from './pages/Dashboard/DadosGerais';
 import Alerts from './pages/UiElements/Alerts';
@@ -74,19 +74,19 @@ function App() {
           }
         />
         <Route
-          path="/auth/signin"
+          path="/auth/login"
           element={
             <>
-              <PageTitle title="Signin | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+              <PageTitle title="Login" />
               <SignIn />
             </>
           }
         />
         <Route
-          path="/auth/signup"
+          path="/auth/registrar"
           element={
             <>
-              <PageTitle title="Signup | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+              <PageTitle title="Registrar" />
               <SignUp />
             </>
           }
