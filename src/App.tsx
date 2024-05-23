@@ -3,7 +3,7 @@ import { Route, Routes, useLocation } from 'react-router-dom';
 
 import Loader from './common/Loader';
 import PageTitle from './components/PageTitle';
-import SignIn from './pages/Authentication/SignIn';
+import SignIn from './pages/Authentication/Login';
 import SignUp from './pages/Authentication/SignUp';
 import Chart from './pages/Chart';
 import DadosGerais from './pages/Dashboard/DadosGerais';

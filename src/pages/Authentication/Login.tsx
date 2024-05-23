@@ -62,9 +62,9 @@ const SignIn: React.FC = () => {
       if (response.ok) {
         const data = await response.json()
 
-        localStorage.setItem("accessToken", data.token)
-        localStorage.setItem("refreshToken", data.expirationTime)
-        localStorage.setItem("userName", data.fullName)  
+        localStorage.setItem("accessToken", data.jwtToken)
+        localStorage.setItem("token", data.token)
+        localStorage.setItem("userName", data.fullName)
 
         setOpenModal(true)
       } 
@@ -78,7 +78,8 @@ const SignIn: React.FC = () => {
       }
 
     } catch (error) {
-      alert("Ocorreu um erro ao enviar o arquivo.");
+      console.log(error)
+      alert("Ocorreu um erro ao tentar logar");
     } finally {
       setLoadingData(false);
     }
