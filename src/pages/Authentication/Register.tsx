@@ -12,19 +12,20 @@ const SignUp: React.FC = () => {
   const [cpf, setCpf] = useState<string>("")
   const [name, setName] = useState<string>("")
   const [password, setPassword] = useState<string>("")
+  const [confirmPassword, setConfirmPassword] = useState<string>("")
   const [successOpenModal, setSucessOpenModal] = useState<boolean>(false);
   const [loadingData, setLoadingData] = useState<boolean>(false)
   const [errorMessage, setErrorMessage] = useState<string | false>('')
   const [formData, setFormData] = useState({
     cpf: cpf,
     fullName: name,
-    password: password
+    password: password,
+    confirmPassword: confirmPassword
   })
 
   function handleModalClose() 
   {
     setSucessOpenModal(false)
-    navigate('/auth/login')
   }
 
   async function handleSetCpf(event: React.ChangeEvent<HTMLInputElement>)
@@ -46,6 +47,7 @@ const SignUp: React.FC = () => {
       fullName: name
     })
   }
+  
 
   async function handleSetPassword(event: React.ChangeEvent<HTMLInputElement>)
   {
@@ -54,6 +56,16 @@ const SignUp: React.FC = () => {
     setFormData({
       ...formData,
       password: event.target.value
+    })
+  }
+
+  async function handleSetConfirmPassword(event: React.ChangeEvent<HTMLInputElement>)
+  {
+    setConfirmPassword(event.target.value);
+
+    setFormData({
+      ...formData,
+      confirmPassword: event.target.value
     })
   }
 
@@ -72,19 +84,36 @@ const SignUp: React.FC = () => {
         body: JSON.stringify(formData)
       })
 
-      if (response.ok) {
+      if (response.status == 200) {
+        setSucessOpenModal(true)
+
+        setFormData({
+          ...formData,
+          cpf: "",
+          fullName: "",
+          password: "",
+          confirmPassword: "",
+        })
+
+        setCpf("")
+        setName("")
+        setPassword("")
+        setConfirmPassword("")
+      } 
+
+      if (response.status == 400) {
         const data = await response.json()
 
-        console.log(data)
-
-        setSucessOpenModal(true)
-      } 
+        setErrorMessage(data.errors[0]);
+      }
 
       if (response.status == 401) {
         setErrorMessage("Você não tem permissão para usar esse recurso!")
       }
 
       if (response.status == 500) {
+        const data = await response.json()
+
         setErrorMessage("Erro ao realizar o registro")
       }
 
@@ -335,6 +364,9 @@ const SignUp: React.FC = () => {
                       type="password"
                       placeholder="Senha"
                       className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+                      value={confirmPassword}
+                      onChange={handleSetConfirmPassword}
+                      required
                     />
 
                     <span className="absolute right-4 top-4">

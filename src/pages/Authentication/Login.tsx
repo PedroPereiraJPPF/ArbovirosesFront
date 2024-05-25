@@ -27,11 +27,13 @@ const SignIn: React.FC = () => {
 
   async function handleSetCpf(event: React.ChangeEvent<HTMLInputElement>)
   {
-    setCpf(cpfMask(event.target.value));
+    const cpfMaskValue = cpfMask(event.target.value)
+
+    setCpf(cpfMaskValue);
 
     setFormData({
       ...formData,
-      cpf: cpf
+      cpf: cpfMaskValue
     })
   }
 
@@ -52,6 +54,7 @@ const SignIn: React.FC = () => {
 
       setLoadingData(true);
       setErrorMessage(false)
+      
       const response = await fetch(baseApiUrl + '/auth/login', {
         method: 'POST',
         headers: {
@@ -79,7 +82,6 @@ const SignIn: React.FC = () => {
       }
 
     } catch (error) {
-      console.log(error)
       alert("Ocorreu um erro ao tentar logar");
     } finally {
       setLoadingData(false);

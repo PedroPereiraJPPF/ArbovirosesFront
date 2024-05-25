@@ -2,6 +2,7 @@ import { useState } from 'react';
 import DefaultLayout from '../../layout/DefaultLayout';
 import { SuccessModal } from '../../components/Modals/SuccessModal';
 import { useNavigate } from 'react-router-dom';
+import api from '../../service/api/Api';
 
 const CarregarDados: React.FC = () => {
     const baseApiUrl = process.env.REACT_APP_API_URL ?? ""
@@ -19,8 +20,6 @@ const CarregarDados: React.FC = () => {
         setFile(null)
         setFileName(null)
         const uploadedFile = event.target.files?.[0];
-
-        console.log(uploadedFile)
 
         if (uploadedFile) {
             if (uploadedFile.name.split('.').pop()?.toLowerCase() !== 'csv') {
@@ -50,15 +49,9 @@ const CarregarDados: React.FC = () => {
           try {
             setLoadingData(true);
 
-            const response = await fetch(baseApiUrl + '/savecsvdata', {
-              method: 'POST',
-              body: formData,
-              headers: {
-                'Authorization' : `Bearer ${authToken}` 
-              }
-            });
+            const response = await api.post('/savecsvdata', formData)
       
-            if (response.ok) {
+            if (response.status == 200) {
               setFile(null)
               setFileName(null)
               setOpenSuccessModal(true)

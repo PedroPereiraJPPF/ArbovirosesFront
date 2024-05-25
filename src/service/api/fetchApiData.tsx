@@ -19,6 +19,6 @@ export default async function getApiData(uri: string)
   
     return data.data
   } catch (error) {
-    console.log(error)
+    
   }
 }
