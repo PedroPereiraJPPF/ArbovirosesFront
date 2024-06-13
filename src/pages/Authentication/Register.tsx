@@ -5,15 +5,16 @@ import Logo from '../../images/logo/Logo.png';
 import DefaultLayout from '../../layout/DefaultLayout';
 import { cpfMask } from '../../common/input/CpfMask';
 import { SuccessModal } from '../../components/Modals/SuccessModal';
+import { ErrorModal } from '../../components/Modals/ErrorModal';
+import api from '../../service/api/Api';
 
 const SignUp: React.FC = () => {
-  const navigate = useNavigate()
-  const baseApiUrl = process.env.REACT_APP_API_URL ?? "" 
   const [cpf, setCpf] = useState<string>("")
   const [name, setName] = useState<string>("")
   const [password, setPassword] = useState<string>("")
   const [confirmPassword, setConfirmPassword] = useState<string>("")
-  const [successOpenModal, setSucessOpenModal] = useState<boolean>(false);
+  const [successModalOpen, setSucessModalOpen] = useState<boolean>(false)
+  const [errorModalOpen, setErrorModalOpen] = useState<boolean>(false)
   const [loadingData, setLoadingData] = useState<boolean>(false)
   const [errorMessage, setErrorMessage] = useState<string | false>('')
   const [formData, setFormData] = useState({
@@ -23,9 +24,14 @@ const SignUp: React.FC = () => {
     confirmPassword: confirmPassword
   })
 
-  function handleModalClose() 
+  function handleSuccessModalClose() 
   {
-    setSucessOpenModal(false)
+    setSucessModalOpen(false)
+  }
+
+  function handleErrorModalClose() 
+  {
+    setErrorModalOpen(false)
   }
 
   async function handleSetCpf(event: React.ChangeEvent<HTMLInputElement>)
@@ -76,16 +82,11 @@ const SignUp: React.FC = () => {
 
       setLoadingData(true)
       setErrorMessage(false)
-      const response = await fetch(baseApiUrl + '/auth/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(formData)
-      })
+
+      const response = await api.post('/auth/register', formData)
 
       if (response.status == 200) {
-        setSucessOpenModal(true)
+        setSucessModalOpen(true)
 
         setFormData({
           ...formData,
@@ -101,8 +102,12 @@ const SignUp: React.FC = () => {
         setConfirmPassword("")
       } 
 
+      const data = await response.data
+
+      console.log(data)
+
       if (response.status == 400) {
-        const data = await response.json()
+        const data = await response.data
 
         setErrorMessage(data.errors[0]);
       }
@@ -112,13 +117,11 @@ const SignUp: React.FC = () => {
       }
 
       if (response.status == 500) {
-        const data = await response.json()
-
         setErrorMessage("Erro ao realizar o registro")
       }
 
     } catch (error) {
-      alert("Ocorreu um erro ao tentar registrar");
+      setErrorModalOpen(true)
     } finally {
       setLoadingData(false);
     }
@@ -423,9 +426,16 @@ const SignUp: React.FC = () => {
         </div>
       </div>
       <SuccessModal
-        openModal={successOpenModal}
-        handleModalClose={handleModalClose}
+        openModal={successModalOpen}
+        handleModalClose={handleSuccessModalClose}
         message='Registro realizado com sucesso!'
+        position='center'
+      />
+
+      <ErrorModal 
+        openModal={errorModalOpen}
+        handleModalClose={handleErrorModalClose}
+        message='Erro ao realizar o registro!'
         position='center'
       />
     </DefaultLayout>
