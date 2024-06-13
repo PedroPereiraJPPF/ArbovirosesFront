@@ -13,7 +13,8 @@ const SignIn: React.FC = () => {
   const [password, setPassword] = useState<string>("")
   const [loadingData, setLoadingData] = useState<boolean>(false)
   const [errorMessage, setErrorMessage] = useState<string | false>('')
-  const [successOpenModal, setSuccessOpenModal] = useState<boolean>(false);
+  const [successOpenModal, setSuccessOpenModal] = useState<boolean>(false)
+
   const [formData, setFormData] = useState({
     cpf: cpf,
     password: password
@@ -69,6 +70,8 @@ const SignIn: React.FC = () => {
         localStorage.setItem("accessToken", data.jwtToken)
         localStorage.setItem("token", data.token)
         localStorage.setItem("userName", data.fullName)
+
+        console.log(data.token)
 
         setSuccessOpenModal(true)
       } 

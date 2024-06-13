@@ -5,10 +5,7 @@ import Loader from './common/Loader';
 import PageTitle from './components/PageTitle';
 import SignIn from './pages/Authentication/Login';
 import SignUp from './pages/Authentication/Register';
-import Chart from './pages/Chart';
 import DadosGerais from './pages/Dashboard/DadosGerais';
-import Alerts from './pages/UiElements/Alerts';
-import Buttons from './pages/UiElements/Buttons';
 import CarregarDados from './pages/Dashboard/CarregarDados';
 
 function App() {
@@ -43,33 +40,6 @@ function App() {
             <>
               <PageTitle title="Carregar dados"/>
               <CarregarDados />
-            </>
-          }
-        />
-        <Route
-          path="/chart"
-          element={
-            <>
-              <PageTitle title="Basic Chart | TailAdmin - Tailwind CSS Admin Dashboard Template" />
-              <Chart />
-            </>
-          }
-        />
-        <Route
-          path="/ui/alerts"
-          element={
-            <>
-              <PageTitle title="Alerts | TailAdmin - Tailwind CSS Admin Dashboard Template" />
-              <Alerts />
-            </>
-          }
-        />
-        <Route
-          path="/ui/buttons"
-          element={
-            <>
-              <PageTitle title="Buttons | TailAdmin - Tailwind CSS Admin Dashboard Template" />
-              <Buttons />
             </>
           }
         />

@@ -5,7 +5,6 @@ import { useNavigate } from 'react-router-dom';
 import api from '../../service/api/Api';
 
 const CarregarDados: React.FC = () => {
-    const baseApiUrl = process.env.REACT_APP_API_URL ?? ""
     const authToken = localStorage.getItem('accessToken') ?? ""
     const navigate = useNavigate()
     const [file, setFile] = useState<File | null>(null);
