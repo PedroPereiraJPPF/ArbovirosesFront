@@ -1,14 +1,8 @@
 import { Button, Modal } from "flowbite-react";
+import ModalProps from "./props/ModalProps";
 
-interface SuccessModalProps
-{
-  openModal: boolean,
-  message: string,
-  handleModalClose: Function,
-  position: string
-}
 
-export function SuccessModal({openModal, handleModalClose, message, position} : SuccessModalProps) {
+export function SuccessModal({openModal, handleModalClose, message, position} : ModalProps) {
   return (
     <>
       <Modal 

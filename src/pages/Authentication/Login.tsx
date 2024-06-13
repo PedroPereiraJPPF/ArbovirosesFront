@@ -5,6 +5,7 @@ import Logo from '../../images/logo/Logo.png';
 import DefaultLayout from '../../layout/DefaultLayout';
 import { SuccessModal } from '../../components/Modals/SuccessModal';
 import { cpfMask } from '../../common/input/CpfMask';
+import { ErrorModal } from '../../components/Modals/ErrorModal';
 
 const SignIn: React.FC = () => {
   const baseApiUrl = process.env.REACT_APP_API_URL ?? "" 
@@ -14,16 +15,22 @@ const SignIn: React.FC = () => {
   const [loadingData, setLoadingData] = useState<boolean>(false)
   const [errorMessage, setErrorMessage] = useState<string | false>('')
   const [successOpenModal, setSuccessOpenModal] = useState<boolean>(false)
+  const [errorModalOpen, setErrorModalOpen] = useState<boolean>(false)
 
   const [formData, setFormData] = useState({
     cpf: cpf,
     password: password
   })
 
-  function handleModalClose() 
+  function handleSucessModalClose() 
   {
     setSuccessOpenModal(false)
     navigate('/')
+  }
+
+  function handleErrorModalClose() 
+  {
+    setErrorModalOpen(false)
   }
 
   async function handleSetCpf(event: React.ChangeEvent<HTMLInputElement>)
@@ -71,21 +78,19 @@ const SignIn: React.FC = () => {
         localStorage.setItem("token", data.token)
         localStorage.setItem("userName", data.fullName)
 
-        console.log(data.token)
-
         setSuccessOpenModal(true)
       } 
 
-      if (response.status == 401) {
+      if (response.status === 400) {
         setErrorMessage("CPF ou Senha inválidos")
       }
 
-      if (response.status == 500) {
-        setErrorMessage("Erro ao realizar o login")
+      if (response.status === 500) {
+        setErrorModalOpen(true)
       }
 
     } catch (error) {
-      alert("Ocorreu um erro ao tentar logar");
+      setErrorModalOpen(true)
     } finally {
       setLoadingData(false);
     }
@@ -336,8 +341,15 @@ const SignIn: React.FC = () => {
       </div>
       <SuccessModal
         openModal={successOpenModal}
-        handleModalClose={handleModalClose}
+        handleModalClose={handleSucessModalClose}
         message='Login realizado com sucesso!'
+        position='center'
+      />
+
+      <ErrorModal
+        openModal={errorModalOpen}
+        handleModalClose={handleErrorModalClose}
+        message='Erro ao realizar login'
         position='center'
       />
     </DefaultLayout>
