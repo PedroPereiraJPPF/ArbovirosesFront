@@ -7,6 +7,7 @@ import { cpfMask } from '../../common/input/CpfMask';
 import { SuccessModal } from '../../components/Modals/SuccessModal';
 import { ErrorModal } from '../../components/Modals/ErrorModal';
 import api from '../../service/api/Api';
+import { AxiosError } from 'axios';
 
 const SignUp: React.FC = () => {
   const navigate = useNavigate()
@@ -103,8 +104,11 @@ const SignUp: React.FC = () => {
         setConfirmPassword("")
       }
 
+    } catch (error: AxiosError | any) {
+      const response = error.response
+
       if (response.status == 400) {
-        const data = await response.data
+        const data = await response.config.data
 
         setErrorMessage(data.errors[0]);
       }
@@ -112,14 +116,13 @@ const SignUp: React.FC = () => {
       if (response.status == 401) {
         setErrorMessage("Você não tem permissão para usar esse recurso!")
 
-        navigate('/login')
+        navigate('/auth/login')
       }
 
       if (response.status == 500) {
         setErrorMessage("Erro ao realizar o registro")
       }
 
-    } catch (error) {
       setErrorModalOpen(true)
     } finally {
       setLoadingData(false);
