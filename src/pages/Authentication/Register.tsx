@@ -9,6 +9,7 @@ import { ErrorModal } from '../../components/Modals/ErrorModal';
 import api from '../../service/api/Api';
 
 const SignUp: React.FC = () => {
+  const navigate = useNavigate()
   const [cpf, setCpf] = useState<string>("")
   const [name, setName] = useState<string>("")
   const [password, setPassword] = useState<string>("")
@@ -100,11 +101,7 @@ const SignUp: React.FC = () => {
         setName("")
         setPassword("")
         setConfirmPassword("")
-      } 
-
-      const data = await response.data
-
-      console.log(data)
+      }
 
       if (response.status == 400) {
         const data = await response.data
@@ -114,6 +111,8 @@ const SignUp: React.FC = () => {
 
       if (response.status == 401) {
         setErrorMessage("Você não tem permissão para usar esse recurso!")
+
+        navigate('/auth/login')
       }
 
       if (response.status == 500) {

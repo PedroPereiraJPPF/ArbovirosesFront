@@ -54,6 +54,8 @@ const CarregarDados: React.FC = () => {
               setFile(null)
               setFileName(null)
               setOpenSuccessModal(true)
+            } else if (response.status == 401) {
+                navigate('/auth/register')
             } else {
               setFile(null)
               setFileName(null)

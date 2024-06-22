@@ -52,7 +52,6 @@ api.interceptors.response.use(
                 localStorage.removeItem("token")
                 localStorage.removeItem("accessToken")
                 localStorage.removeItem("userName")
-                window.location.href = 'auth/login';
             }
         }
 
