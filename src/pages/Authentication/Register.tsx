@@ -112,7 +112,7 @@ const SignUp: React.FC = () => {
       if (response.status == 401) {
         setErrorMessage("Você não tem permissão para usar esse recurso!")
 
-        navigate('/auth/login')
+        navigate('/login')
       }
 
       if (response.status == 500) {
