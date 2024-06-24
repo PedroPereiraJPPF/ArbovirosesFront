@@ -13,10 +13,10 @@ const BaseTable: React.FC<BaseTableProps> = ({neighborhoodData}) => {
           <thead>
             <tr className="bg-gray-2 text-left dark:bg-meta-4">
               <th className="min-w-[220px] py-4 px-4 font-medium text-black dark:text-white xl:pl-11">
-                Bairro
+                Bairros
               </th>
               <th className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white">
-                Notificações
+                Notificados
               </th>
               <th className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white">
                 Confirmados
@@ -28,7 +28,7 @@ const BaseTable: React.FC<BaseTableProps> = ({neighborhoodData}) => {
                 Curados
               </th>
               <th className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white">
-                Mortes
+                Obitos
               </th>
               <th className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white">
                 Ignorados
