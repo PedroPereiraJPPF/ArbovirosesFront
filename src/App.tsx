@@ -36,7 +36,16 @@ function App() {
           }
         />
         <Route
-          path='/DadosLira'
+          path='/dashboard/dadosGerais'
+          element={
+            <>
+              <PageTitle title="Dashboard Arboviroses" />
+              <DadosGerais />
+            </>
+          }
+        />
+        <Route
+          path='/dashboard/dadosLira'
           element={
             <>
               <PageTitle title="Dados lira"/>
