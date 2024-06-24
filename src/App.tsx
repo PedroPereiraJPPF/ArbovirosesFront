@@ -7,6 +7,7 @@ import SignIn from './pages/Authentication/Login';
 import SignUp from './pages/Authentication/Register';
 import DadosGerais from './pages/Dashboard/DadosGerais';
 import CarregarDados from './pages/Dashboard/CarregarDados';
+import LiraPage from './pages/Dashboard/LiraPage';
 
 function App() {
   const [loading, setLoading] = useState<boolean>(true);
@@ -31,6 +32,15 @@ function App() {
             <>
               <PageTitle title="Dashboard Arboviroses" />
               <DadosGerais />
+            </>
+          }
+        />
+        <Route
+          path='/DadosLira'
+          element={
+            <>
+              <PageTitle title="Dados lira"/>
+              <LiraPage />
             </>
           }
         />
