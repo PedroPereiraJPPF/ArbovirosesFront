@@ -220,7 +220,8 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
               <li>
                 {
                   localStorage.getItem('token') != undefined && (
-                    <NavLink
+                    <li>
+                      <NavLink
                       to="/carregarDados"
                       className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
                         pathname.includes('chart') && 'bg-graydark dark:bg-meta-4'
@@ -245,7 +246,8 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                         </defs>
                       </svg>
                       Carregar Dados
-                    </NavLink>
+                      </NavLink>
+                    </li>
                   )
                 }
               </li>
@@ -334,29 +336,35 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                         }`}
                       >
                         <ul className="mt-4 mb-5.5 flex flex-col gap-2.5 pl-6">
-                          <li>
-                            <NavLink
-                              to="/auth/Login"
-                              className={({ isActive }) =>
-                                'group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ' +
-                                (isActive && '!text-white')
-                              }
-                            >
-                              Logar
-                            </NavLink>
-                          </li>
+                            {
+                              localStorage.getItem('token') == undefined && (
+                                <li>
+                                  <NavLink
+                                    to="/auth/Login"
+                                    className={({ isActive }) =>
+                                      'group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ' +
+                                      (isActive && '!text-white')
+                                    }
+                                  >
+                                    Logar
+                                  </NavLink>
+                                </li>
+                              )
+                            }
                           <li>
                             {
                               localStorage.getItem('token') != undefined && (
-                                <NavLink
-                                  to="/auth/registrar"
-                                  className={({ isActive }) =>
-                                    'group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ' +
-                                    (isActive && '!text-white')
-                                  }
-                                >
-                                  Registrar
-                                </NavLink>
+                                <li>
+                                  <NavLink
+                                    to="/auth/registrar"
+                                    className={({ isActive }) =>
+                                      'group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ' +
+                                      (isActive && '!text-white')
+                                    }
+                                  >
+                                    Registrar
+                                  </NavLink>
+                                </li>
                               )
                             }
                           </li>
