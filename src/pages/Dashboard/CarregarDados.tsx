@@ -21,8 +21,9 @@ const CarregarDados: React.FC = () => {
         const uploadedFile = event.target.files?.[0];
 
         if (uploadedFile) {
-            if (uploadedFile.name.split('.').pop()?.toLowerCase() !== 'csv') {
-                setErrorMessage('o arquivo precisa ser um csv')
+
+            if (uploadedFile.name.split('.').pop()?.toLowerCase() !== 'csv' && uploadedFile.name.split('.').pop()?.toLowerCase() !== 'xlsx') {
+                setErrorMessage('o arquivo precisa ser um csv ou xlsx')
                 return
             }
 
@@ -43,7 +44,7 @@ const CarregarDados: React.FC = () => {
           }
       
           const formData = new FormData();
-          formData.append('csv_file', file);
+          formData.append('file', file);
       
           try {
             setLoadingData(true);
