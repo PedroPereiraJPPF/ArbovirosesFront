@@ -8,6 +8,7 @@ import SignUp from './pages/Authentication/Register';
 import DadosGerais from './pages/Dashboard/DadosGerais';
 import CarregarDados from './pages/Dashboard/CarregarDados';
 import PrevisaoDeCasos from './pages/Dashboard/PrevisaoDeCasos';
+import DadosGeograficos from './pages/Dashboard/DadosGeograficos';
 
 function App() {
   const [loading, setLoading] = useState<boolean>(true);
@@ -59,6 +60,15 @@ function App() {
             <>
               <PageTitle title="Previsão de casos"/>
               <PrevisaoDeCasos />
+            </>
+          }
+        />
+        <Route 
+          path="/dashboard/dadosGeograficos"
+          element={
+            <>
+              <PageTitle title="Dados geográficos"/>
+              <DadosGeograficos />
             </>
           }
         />

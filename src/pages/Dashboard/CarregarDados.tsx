@@ -14,7 +14,7 @@ const CarregarDados: React.FC = () => {
     const [openSucessModal, setOpenSuccessModal] = useState<boolean>(false);
 
     function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) 
-    {
+    { 
         setErrorMessage(null)
         setFile(null)
         setFileName(null)

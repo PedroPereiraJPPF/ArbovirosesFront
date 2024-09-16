@@ -30,9 +30,13 @@ const App: React.FC = () => {
   const [ageRangeCategories, setAgeRangeCategories] = useState<any>([])
   const [affectedNeighborhoods, setAffectedNeighborhoods] = useState<any>(0)
   const [notificationsCount, setNotificationsCount] = useState<any>(0)
-  const [yearSelected, setYearSelected] = useState<string>((new Date().getFullYear()).toString())
   const [neighborhoodApiData, setNeighborhoodApiData] = useState<NeighborhoodInfo[]>([])
-  const [agravoSelected, setAgravoSelected] = useState<string>('dengue')
+  const [agravoSelected, setAgravoSelected] = useState<string>(() => {
+    return localStorage.getItem('agravoSelected') || 'dengue';
+  });
+  const [yearSelected, setYearSelected] = useState<string>(() => {
+    return localStorage.getItem('yearSelected') || new Date().getFullYear().toString();
+  });
   
   useEffect(() => {
     mountAgravoLineData(setAgravoLineSeries, yearSelected, agravoSelected);
@@ -42,6 +46,8 @@ const App: React.FC = () => {
     mountNeighborhoodData(setNeighborhoodApiData, yearSelected, agravoSelected);
     affectedNeighborhoodCount(setAffectedNeighborhoods, yearSelected, agravoSelected);
     notificationsCountData(setNotificationsCount, yearSelected, agravoSelected);
+    localStorage.setItem('yearSelected', yearSelected);
+    localStorage.setItem('agravoSelected', agravoSelected);
   }, [yearSelected, agravoSelected])
 
   return (
