@@ -2,13 +2,14 @@ import React, { useEffect, useState } from 'react';
 import AgravoLineChart from '../../components/Charts/AgravoLineChart';
 import DefaultLayout from '../../layout/DefaultLayout';
 import { ApexOptions } from 'apexcharts';
-import { countByEpidemiologicalWeekOptions, mountAgravoLineData } from '../../service/components/EpidemiologicalWeek';
+import { previsionCasesOptions, mountPrevisionCasesData } from '../../service/components/GetPrevisionData';
 import InputDefault from '../../components/Forms/Inputs/InputDefault';
 import DefaultButton from '../../components/Forms/Buttons/DefaultButton';
 import AgravoSelector from '../../components/Forms/SelectGroup/AgravoSelector';
 import YearSelector from '../../components/Forms/SelectGroup/YearSelector';
+import { postApiData } from '../../service/api/fetchApiData';
 
-const lineChartOptionsByEpidemiologicalWeek: ApexOptions = countByEpidemiologicalWeekOptions();
+const optionsForPrevisionCases: ApexOptions = previsionCasesOptions();
 
 const App: React.FC = () => {
   const [agravoLineSeries, setAgravoLineSeries] = useState<any>([])
@@ -18,10 +19,35 @@ const App: React.FC = () => {
   const [yearSelected, setYearSelected] = useState<string>(() => {
     return localStorage.getItem('yearSelected') || new Date().getFullYear().toString();
   });
+
+  const [rainfallIndex, setRainfallIndex] = useState('');
+  const [airHumidity, setAirHumidity] = useState('');
+  const [meanTemperature, setMeanTemperature] = useState('');
+  const [dengueCases, setDengueCases] = useState('');
+
+  function fetchPrevisionData() {
+    const data = {
+      rainfall_index: rainfallIndex,
+      air_humidity: airHumidity,
+      mean_temperature: meanTemperature,
+      dengue_cases: dengueCases,
+    };
+
+    mountPrevisionCasesData(setAgravoLineSeries, data);
+  }
+
+  async function clearPrevisionData() {
+    try {
+      await postApiData('/clear', {}, 'POST', 'http://localhost:8000');
+      setAgravoLineSeries([]);
+    } catch (error) {
+      console.error("Erro ao limpar dados de previsão:", error);
+    }
+  }
   
   useEffect(() => {
     localStorage.setItem('yearSelected', yearSelected);
-    localStorage.setItem('agravoSelected', agravoSelected);    
+    localStorage.setItem('agravoSelected', agravoSelected);   
   }, [yearSelected, agravoSelected]) 
 
   return (
@@ -39,16 +65,22 @@ const App: React.FC = () => {
 
       <div className="mt-4 flex flex-col gap-4 md:mt-6 md:flex-row md:gap-6 2xl:mt-7.5 2xl:gap-7.5">
       <div className="bg-white dark:bg-boxdark p-5 flex-1 md:max-w-sm">
-        <InputDefault label="Teste" />
-        <InputDefault label="Teste 2" />
-        <InputDefault label="Teste 3" />
-        <InputDefault label="Teste 4" />
+          <InputDefault label="Índice de precipitação" value={rainfallIndex} onChange={(e) => setRainfallIndex(e.target.value)} />
+          <InputDefault label="Humidade do ar" value={airHumidity} onChange={(e) => setAirHumidity(e.target.value)} />
+          <InputDefault label="Temperatura média" value={meanTemperature} onChange={(e) => setMeanTemperature(e.target.value)} />
+          <InputDefault label="Casos de dengue" value={dengueCases} onChange={(e) => setDengueCases(e.target.value)} />
 
-        <div className="pt-1">
+        <div className="pt-1 flex gap-2">
+          <DefaultButton
+              disabled={false}
+              loadingData={false}
+              onClick={clearPrevisionData}
+              buttonText="Limpar Dados"
+            />
           <DefaultButton
             disabled={false}
             loadingData={false}
-            onClick={() => {}}
+            onClick={fetchPrevisionData}
             buttonText="Enviar"
           />
         </div>
@@ -56,7 +88,7 @@ const App: React.FC = () => {
       
       <div className="flex-1 h-full mt-4 md:mt-0">
         <AgravoLineChart 
-          options={lineChartOptionsByEpidemiologicalWeek}
+          options={optionsForPrevisionCases}
           series={agravoLineSeries}
         />
       </div>
