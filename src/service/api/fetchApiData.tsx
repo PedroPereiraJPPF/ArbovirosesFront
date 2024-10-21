@@ -40,7 +40,7 @@ export async function postApiData(uri: string, data?: any, method: string = "GET
           headers: {
               'Content-Type': 'application/json',
           },
-          body: data ? JSON.stringify(data) : undefined, // Apenas para métodos como POST
+          body: data ? JSON.stringify(data) : undefined,
       };
 
       const response = await postfetchApi(uri, options, baseUrl);
@@ -48,7 +48,6 @@ export async function postApiData(uri: string, data?: any, method: string = "GET
 
       return responseData;
   } catch (error) {
-      console.error("Erro ao buscar dados da API:", error);
       throw error;
   }
 }

@@ -5,25 +5,20 @@ import { ApexOptions } from 'apexcharts';
 import { previsionCasesOptions, mountPrevisionCasesData } from '../../service/components/GetPrevisionData';
 import InputDefault from '../../components/Forms/Inputs/InputDefault';
 import DefaultButton from '../../components/Forms/Buttons/DefaultButton';
-import AgravoSelector from '../../components/Forms/SelectGroup/AgravoSelector';
-import YearSelector from '../../components/Forms/SelectGroup/YearSelector';
 import { postApiData } from '../../service/api/fetchApiData';
-
-const optionsForPrevisionCases: ApexOptions = previsionCasesOptions();
+import YearMultiselect from '../../components/Forms/SelectGroup/MultiYearSelector';
 
 const App: React.FC = () => {
   const [agravoLineSeries, setAgravoLineSeries] = useState<any>([])
-  const [agravoSelected, setAgravoSelected] = useState<string>(() => {
-    return localStorage.getItem('agravoSelected') || 'dengue';
-  });
-  const [yearSelected, setYearSelected] = useState<string>(() => {
-    return localStorage.getItem('yearSelected') || new Date().getFullYear().toString();
-  });
-
+  const [years, setYears] = useState<string[]>(() => {
+    return [new Date().getFullYear().toString()];
+  }); 
+  const [optionsForPrevisionCases, setOptionsForPrevisionCases] = useState<ApexOptions>({});
   const [rainfallIndex, setRainfallIndex] = useState('');
   const [airHumidity, setAirHumidity] = useState('');
   const [meanTemperature, setMeanTemperature] = useState('');
   const [dengueCases, setDengueCases] = useState('');
+  const [categories, setCategories] = useState<string[]>([])
 
   function fetchPrevisionData() {
     const data = {
@@ -33,8 +28,27 @@ const App: React.FC = () => {
       dengue_cases: dengueCases,
     };
 
-    mountPrevisionCasesData(setAgravoLineSeries, data);
+    mountPrevisionCasesData(setAgravoLineSeries, setCategories, years, data);
   }
+
+  useEffect(() => {
+    fetchPrevisionData();
+  }, [years])
+
+  useEffect(() => {
+    let previsionColor = "#4CAF50";
+    let hasPrevisions = categories.includes("Previsão");
+
+    if (hasPrevisions) {
+      let previsionIndex = agravoLineSeries[0].data.length - 1
+
+      if (agravoLineSeries[0].data[previsionIndex] >= agravoLineSeries[0].data[previsionIndex - 1] * 1.5) {
+        previsionColor = "#FF4560"
+      }
+    }
+
+    setOptionsForPrevisionCases(previsionCasesOptions(hasPrevisions, categories, previsionColor));
+  }, [categories]);
 
   async function clearPrevisionData() {
     try {
@@ -45,30 +59,18 @@ const App: React.FC = () => {
     }
   }
   
-  useEffect(() => {
-    localStorage.setItem('yearSelected', yearSelected);
-    localStorage.setItem('agravoSelected', agravoSelected);   
-  }, [yearSelected, agravoSelected]) 
-
   return (
     <DefaultLayout>
-      <div className='flex justify-end gap-x-2 items-center'>
-        <YearSelector
-          yearSelected={yearSelected}
-          setYearSelected={setYearSelected}
-        />
-        <AgravoSelector
-          agravoSelected={agravoSelected}
-          setAgravoSelected={setAgravoSelected}
-        />
+      <div className='flex justify-center gap-x-2 items-center'>
+        <YearMultiselect selectedYears={years} setSelectedYears={setYears}/>
       </div>
 
       <div className="mt-4 flex flex-col gap-4 md:mt-6 md:flex-row md:gap-6 2xl:mt-7.5 2xl:gap-7.5">
       <div className="bg-white dark:bg-boxdark p-5 flex-1 md:max-w-sm">
-          <InputDefault label="Índice de precipitação" value={rainfallIndex} onChange={(e) => setRainfallIndex(e.target.value)} />
-          <InputDefault label="Humidade do ar" value={airHumidity} onChange={(e) => setAirHumidity(e.target.value)} />
-          <InputDefault label="Temperatura média" value={meanTemperature} onChange={(e) => setMeanTemperature(e.target.value)} />
-          <InputDefault label="Casos de dengue" value={dengueCases} onChange={(e) => setDengueCases(e.target.value)} />
+          <InputDefault label="Índice de precipitação" value={rainfallIndex} onChange={(e) => setRainfallIndex(e.target.value)} placeholder='0.0'/>
+          <InputDefault label="Umidade do ar" value={airHumidity} onChange={(e) => setAirHumidity(e.target.value)} placeholder='0.0'/>
+          <InputDefault label="Temperatura média" value={meanTemperature} onChange={(e) => setMeanTemperature(e.target.value)} placeholder='0.0'/>
+          <InputDefault label="Casos de dengue" value={dengueCases} onChange={(e) => setDengueCases(e.target.value)} placeholder='0'/>
 
         <div className="pt-1 flex gap-2">
           <DefaultButton
