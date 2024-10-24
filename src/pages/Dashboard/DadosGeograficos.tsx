@@ -50,8 +50,6 @@ const App: React.FC = () => {
     return [...coords, intensidade];
   }).filter(Boolean);
 
-  console.log(heatData);
-
   return (
     <DefaultLayout>
       <div className='flex justify-end gap-x-2 items-center'>
