@@ -21,7 +21,7 @@ const HeatLayer: React.FC<{ data: [number, number, number][] }> = ({ data }) => 
     return data.map(([lat, lng, intensity]) => [
       lat,
       lng,
-      maxIntensity === minIntensity ? 0 : ((intensity - minIntensity) / (maxIntensity - minIntensity)) * 30,
+      maxIntensity === minIntensity ? 0 : ((intensity - minIntensity) / (maxIntensity - minIntensity)) * 40,
     ]) as HeatLatLngTuple[];
   }, [data]);
 
