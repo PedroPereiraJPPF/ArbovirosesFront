@@ -7,32 +7,43 @@ import { mountNeighborhoodData } from '../../service/components/NeighborhoodInfo
 
 const App: React.FC = () => {
   const [affectedNeighborhoods, setAffectedNeighborhoods] = useState<any>([])
+
   const [agravoSelected, setAgravoSelected] = useState<string>(() => {
     return localStorage.getItem('agravoSelected') || 'dengue';
   });
+
   const [yearSelected, setYearSelected] = useState<string>(() => {
     return localStorage.getItem('yearSelected') || new Date().getFullYear().toString();
   });
-  const cordsNeighborhoods: { [key: string]: number[] } = {
-    'SANTO ANTÔNIO': [-5.1940, -37.3470],
-    'ALTO DA CONCEIÇÃO': [-5.1910, -37.3450],
+
+  const cordsNeighborhoods: { [key: string]: [number, number] } = {
+    'ABOLIÇÃO': [-5.1870, -37.3440],
     'AEROPORTO': [-5.2010, -37.3220],
-    'BARROCAS': [-5.1920, -37.3360],
+    'ALTO DA CONCEIÇÃO': [-5.1910, -37.3450],
+    'ALTO DE SÃO MANOEL': [-5.210125, -37.33342],
     'BELO HORIZONTE': [-5.1890, -37.3240],
-    'ALTO DO SUMARÉ': [-5.2040, -37.3660],
-    'SANTA DELMIRA': [-5.1990, -37.3570],
-    'PAREDÕES': [-5.1900, -37.3420],
-    'NOVA BETÂNIA': [-5.1760, -37.3400],
-    'BOM JARDIM': [-5.1830, -37.3300],
-    'DOM JAIME CÂMARA': [-5.2010, -37.3540],
-    'RINCÃO': [-5.2040, -37.3600],
-    'SANTA JÚLIA': [-5.1950, -37.3400],
     'BOA VISTA': [-5.1840, -37.3410],
-    'ALTO DE SÃO MANOEL': [-5.1950, -37.3550],
-    'CENTRO': [-5.1850, -37.3420],
-    'LAGOA DO MATO': [-5.1800, -37.3350],
+    'BOM JARDIM': [-5.1830, -37.3300],
     'BOM JESUS': [-5.2020, -37.3590],
+    'BARROCAS': [-5.1920, -37.3360],
+    'CENTRO': [-5.1850, -37.3420],
+    'COSTA E SILVA': [-5.2040, -37.3580],
+    'DIX-SEPT ROSADO': [-5.1930, -37.3500],
+    'DOM JAIME CÂMARA': [-5.228459, -37.31464],
     'DOZE ANOS': [-5.1820, -37.3380],
+    'ILHA DE SANTA LUZIA': [-5.1960, -37.3480],
+    'LAGOA DO MATO': [-5.1800, -37.3350],
+    'NOVA BETÂNIA': [-5.1760, -37.3400],
+    'PAREDÕES': [-5.1900, -37.3420],
+    'PLANALTO 13 DE MAIO': [-5.1990, -37.3490],
+    'PRESIDENTE COSTA E SILVA': [-5.1980, -37.3520],
+    'RINCÃO': [-5.2040, -37.3600],
+    'SANTA DELMIRA': [-5.1990, -37.3570],
+    'SANTA JÚLIA': [-5.1950, -37.3400],
+    'SANTO ANTÔNIO': [-5.1663, -37.3433],
+    'ALTO DO SUMARÉ': [-5.231820, -37.339779],
+    'SÃO MANOEL': [-5.1950, -37.3550],
+    'VINGT ROSADO': [-5.2000, -37.3620],
   };
   
   useEffect(() => {

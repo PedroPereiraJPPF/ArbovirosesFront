@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { MapContainer, TileLayer, useMap } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import 'leaflet.heat';
-import L from 'leaflet';
+import L, { HeatLatLngTuple } from 'leaflet';
 
 interface HeatMapProps {
   data: [number, number, number][];
@@ -11,45 +11,52 @@ interface HeatMapProps {
 const HeatLayer: React.FC<{ data: [number, number, number][] }> = ({ data }) => {
   const map = useMap();
 
+  const normalizedData: HeatLatLngTuple[] = useMemo(() => {
+    if (data.length === 0) return [];
+
+    const intensities = data.map(([, , intensity]) => intensity);
+    const minIntensity = Math.min(...intensities);
+    const maxIntensity = Math.max(...intensities);
+
+    return data.map(([lat, lng, intensity]) => [
+      lat,
+      lng,
+      maxIntensity === minIntensity ? 0 : ((intensity - minIntensity) / (maxIntensity - minIntensity)) * 30,
+    ]) as HeatLatLngTuple[];
+  }, [data]);
+
   React.useEffect(() => {
-    const heatLayer = L.heatLayer(data, {
+    const heatLayer = L.heatLayer(normalizedData, {
       radius: 25,
       blur: 15,
+      maxZoom: 17,
       gradient: {
-        0.1: 'rgba(0, 255, 0, 0.1)',
-        0.2: 'rgba(0, 255, 0, 0.2)',
-        0.4: 'rgba(0, 255, 0, 0.3)',
-        0.6: 'rgba(255, 255, 0, 0.4)',
-        0.8: 'rgba(255, 0, 0, 0.7)',
-        1.0: 'rgba(255, 0, 0, 0.8)',
+        0.0: 'rgba(0, 255, 0, 0.4)',  
+        0.3: 'rgba(0, 255, 0, 0.7)',  
+        0.5: 'rgba(255, 255, 0, 0.8)', 
+        0.7: 'rgba(255, 165, 0, 0.9)', 
+        1.0: 'rgba(255, 0, 0, 1.0)',  
       },
     }).addTo(map);
 
     return () => {
       map.removeLayer(heatLayer);
     };
-  }, [map, data]);
+  }, [map, normalizedData]);
 
   return null;
 };
 
 const HeatMap: React.FC<HeatMapProps> = ({ data }) => {
-  const bounds = L.latLngBounds(
-    L.latLng(-5.205, -37.373), 
-    L.latLng(-5.170, -37.315)
-  );
-
   return (
     <MapContainer
-      center={[-5.1878, -37.3442]} 
+      center={[-5.1878, -37.3442]}
       zoom={13}
-      style={{ height: '100vh', width: '100%' }}
+      style={{ height: '70vh', width: '100%' }}
       scrollWheelZoom={true}
-      dragging={true}
       boxZoom={true}
       doubleClickZoom={true}
       tap={true}
-      maxBounds={bounds}              
       maxBoundsViscosity={1.0}
     >
       <TileLayer
