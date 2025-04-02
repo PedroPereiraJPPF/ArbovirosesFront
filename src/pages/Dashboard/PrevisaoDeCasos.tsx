@@ -67,10 +67,10 @@ const App: React.FC = () => {
 
       <div className="mt-4 flex flex-col gap-4 md:mt-6 md:flex-row md:gap-6 2xl:mt-7.5 2xl:gap-7.5">
       <div className="bg-white dark:bg-boxdark p-5 flex-1 md:max-w-sm">
-          <InputDefault label="Índice de precipitação" value={rainfallIndex} onChange={(e) => setRainfallIndex(e.target.value)} placeholder='0.0'/>
-          <InputDefault label="Umidade do ar" value={airHumidity} onChange={(e) => setAirHumidity(e.target.value)} placeholder='0.0'/>
-          <InputDefault label="Temperatura média" value={meanTemperature} onChange={(e) => setMeanTemperature(e.target.value)} placeholder='0.0'/>
-          <InputDefault label="Casos de dengue" value={dengueCases} onChange={(e) => setDengueCases(e.target.value)} placeholder='0'/>
+          <InputDefault label="Índice de precipitação (mm)" value={rainfallIndex} onChange={(e) => setRainfallIndex(e.target.value)} placeholder='0.0'/>
+          <InputDefault label="Umidade do ar (%)" value={airHumidity} onChange={(e) => setAirHumidity(e.target.value)} placeholder='0.0'/>
+          <InputDefault label="Temperatura média (°C)" value={meanTemperature} onChange={(e) => setMeanTemperature(e.target.value)} placeholder='0.0'/>
+          <InputDefault label="Número de casos de Dengue" value={dengueCases} onChange={(e) => setDengueCases(e.target.value)} placeholder='0'/>
 
         <div className="pt-1 flex gap-2">
           <DefaultButton
