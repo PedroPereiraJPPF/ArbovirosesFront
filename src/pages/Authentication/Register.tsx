@@ -36,14 +36,15 @@ const SignUp: React.FC = () => {
     setErrorModalOpen(false)
   }
 
-  async function handleSetCpf(event: React.ChangeEvent<HTMLInputElement>)
-  {
-    setCpf(cpfMask(event.target.value));
+  function handleSetCpf(event: React.ChangeEvent<HTMLInputElement>) {
+    const masked = cpfMask(event.target.value);
 
-    setFormData({
-      ...formData,
-      cpf: cpf
-    })
+    setCpf(masked);
+    
+    setFormData((prev) => ({
+      ...prev,
+      cpf: masked,
+    }));
   }
 
   async function handleSetName(event: React.ChangeEvent<HTMLInputElement>)

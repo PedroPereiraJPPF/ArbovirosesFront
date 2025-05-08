@@ -9,6 +9,7 @@ import DadosGerais from './pages/Dashboard/DadosGerais';
 import CarregarDados from './pages/Dashboard/CarregarDados';
 import PrevisaoDeCasos from './pages/Dashboard/PrevisaoDeCasos';
 import DadosGeograficos from './pages/Dashboard/DadosGeograficos';
+import DashboardBairro from './pages/Dashboard/DashboardBairro';
 
 function App() {
   const [loading, setLoading] = useState<boolean>(true);
@@ -69,6 +70,15 @@ function App() {
             <>
               <PageTitle title="Dados geográficos"/>
               <DadosGeograficos />
+            </>
+          }
+        />
+        <Route 
+          path="/dashboard/bairro/:bairro"
+          element={
+            <>
+              <PageTitle title="Dados do Bairro"/>
+              <DashboardBairro />
             </>
           }
         />

@@ -1,8 +1,9 @@
 import { ApexOptions } from "apexcharts";
 import getApiData from "../api/fetchApiData";
 
-export async function mountAgravoLineData(setAgravoLineSeries: Function, yearSelected: string, agravoSelected: string) {
-    const apiData = await getApiData(`/notifications/count/epidemiologicalWeek?year=${yearSelected}&agravo=${agravoSelected}`)
+export async function mountAgravoLineData(setAgravoLineSeries: Function, yearSelected: string, agravoSelected: string, bairro?: string) {
+    const bairroParam = bairro ? `&bairro=${bairro}` : '';
+    const apiData = await getApiData(`/notifications/count/epidemiologicalWeek?year=${yearSelected}&agravo=${agravoSelected}${bairroParam}`)
 
     const dengueData = apiData.dengue.map((data: any) => {
       return data.casesCount
@@ -36,7 +37,7 @@ export function countByEpidemiologicalWeekOptions() : ApexOptions {
     
     return {
         legend: {
-            show: true,
+            show: false,
             position: 'top',
             horizontalAlign: 'left',
         },

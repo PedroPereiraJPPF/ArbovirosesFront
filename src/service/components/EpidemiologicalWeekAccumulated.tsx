@@ -36,7 +36,7 @@ export function countByEpidemiologicalWeekAccumulatedOptions() : ApexOptions {
     
     return {
         legend: {
-            show: true,
+            show: false,
             position: 'top',
             horizontalAlign: 'left',
         },

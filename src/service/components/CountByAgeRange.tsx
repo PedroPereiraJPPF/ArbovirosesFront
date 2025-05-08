@@ -1,12 +1,30 @@
 import { ApexOptions } from "apexcharts";
 import getApiData from "../api/fetchApiData";
 
-export async function mountColumnCountByAgeRange(setAgeRangeCategories: Function, yearSelected: string, agravoSelected: string) {
-    const apiData = await getApiData(`/notifications/count/ageRange?year=${yearSelected}&agravo=${agravoSelected}`);
+export async function mountColumnCountByAgeRange(setAgeRangeCategories: Function, yearSelected: string, agravoSelected: string, bairro?: string) {
+    const bairroParam = bairro ? `&bairro=${bairro}` : '';
+    const apiData = await getApiData(`/notifications/count/ageRange?year=${yearSelected}&agravo=${agravoSelected}${bairroParam}`);
 
     const count = apiData.count;
 
-    const arrayData = [count['age1to10'], count['age11to20'], count['age21to30'], count['age31to40'], count['age41to50'], count['age51to60'], count['age61to70'], count['age71to80'], count['age81to90'], count['age91to99']];
+    console.log("Count by age range:", count);
+
+    const arrayData = [
+      count['age0to1'],
+      count['age2to3'],
+      count['age4to5'],
+      count['age6to7'],
+      count['age8to9'],
+      count['age10to19'],
+      count['age20to29'],
+      count['age30to39'],
+      count['age40to49'],
+      count['age50to59'],
+      count['age60to69'],
+      count['age70to79'],
+      count['age80to89'],
+      count['age90to99']
+    ];
 
     setAgeRangeCategories([{
       name: "Contagem",  
@@ -57,7 +75,11 @@ export function countByAgeRangeOptions(): ApexOptions {
         },
       
         xaxis: {
-          categories: ['1 - 10', '11 - 20', '21 - 30', '31 - 40', '41 - 50', '51 - 60', '61 - 70', '71 - 80', '81 - 90', '91 - 99'],
+          categories: [
+            '0 - 1', '2 - 3', '4 - 5', '6 - 7', '8 - 9',
+            '10 - 19', '20 - 29', '30 - 39', '40 - 49',
+            '50 - 59', '60 - 69', '70 - 79', '80 - 89', '90 - 99'
+          ]
         },
         legend: {
           position: 'top',

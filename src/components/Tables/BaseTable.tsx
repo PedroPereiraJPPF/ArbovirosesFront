@@ -1,4 +1,5 @@
 import { NeighborhoodInfo } from "../Entity/NeighborhoodInfo";
+import { Link } from "react-router-dom";
 
 interface BaseTableProps {
   neighborhoodData: NeighborhoodInfo[]
@@ -39,9 +40,12 @@ const BaseTable: React.FC<BaseTableProps> = ({neighborhoodData}) => {
             {neighborhoodData.map((neighborhoodItem, key) => (
               <tr key={key}>
                 <td className="border-b border-[#eee] py-5 px-4 pl-9 dark:border-strokedark xl:pl-11">
-                  <h5 className="font-medium text-black dark:text-white">
+                  <Link 
+                    to={`/dashboard/bairro/${neighborhoodItem.nomeBairro}`}
+                    className="font-medium text-primary hover:underline"
+                  >
                     {neighborhoodItem.nomeBairro}
-                  </h5>
+                  </Link>
                 </td>
                 <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                   <p className="text-black dark:text-white">
