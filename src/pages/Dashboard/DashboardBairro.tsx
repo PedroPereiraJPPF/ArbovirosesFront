@@ -36,8 +36,6 @@ const DashboardBairro: React.FC = () => {
       mountDonutCountBySexo(setCountBySexoSeries, yearSelected, agravoSelected, bairro);
       mountColumnCountByAgeRange(setAgeRangeCategories, yearSelected, agravoSelected, bairro);
       notificationsCountData(setNotificationsCount, yearSelected, agravoSelected, bairro);
-      localStorage.setItem('yearSelected', yearSelected);
-      localStorage.setItem('agravoSelected', agravoSelected);
     }
   }, [yearSelected, agravoSelected, bairro]);
 
@@ -45,7 +43,7 @@ const DashboardBairro: React.FC = () => {
     <DefaultLayout>
       <div className='mb-4'>
         <h1 className='text-2xl font-bold text-black dark:text-white'>
-          Dados do Bairro: {bairro}
+          {bairro}
         </h1>
       </div>
 

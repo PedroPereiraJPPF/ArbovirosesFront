@@ -19,12 +19,9 @@ const BaseTable: React.FC<BaseTableProps> = ({neighborhoodData}) => {
               <th className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white">
                 Notificados
               </th>
-              <th className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white">
-                Confirmados
-              </th>
-              <th className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white">
+              {/* <th className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white">
                 Descartados
-              </th>
+              </th> */}
               <th className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white">
                 Curados
               </th>
@@ -43,6 +40,8 @@ const BaseTable: React.FC<BaseTableProps> = ({neighborhoodData}) => {
                   <Link 
                     to={`/dashboard/bairro/${neighborhoodItem.nomeBairro}`}
                     className="font-medium text-primary hover:underline"
+                    target="_blank"
+                    rel="noopener noreferrer"
                   >
                     {neighborhoodItem.nomeBairro}
                   </Link>
@@ -52,16 +51,11 @@ const BaseTable: React.FC<BaseTableProps> = ({neighborhoodData}) => {
                     {neighborhoodItem.casosReportados}
                   </p>
                 </td>
-                <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                  <p className="text-black dark:text-white">
-                    {neighborhoodItem.confirmados}
-                  </p>
-                </td>
-                <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+                {/* <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                   <p className="text-black dark:text-white">
                     {neighborhoodItem.descartados}
                   </p>
-                </td>
+                </td> */}
                 <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                   <p className="text-black dark:text-white">
                     {neighborhoodItem.curados}
