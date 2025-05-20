@@ -82,7 +82,6 @@ const SignUp: React.FC = () => {
   {
     try {
       event.preventDefault()
-
       setLoadingData(true)
       setErrorMessage(false)
 

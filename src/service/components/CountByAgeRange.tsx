@@ -7,8 +7,6 @@ export async function mountColumnCountByAgeRange(setAgeRangeCategories: Function
 
     const count = apiData.count;
 
-    console.log("Count by age range:", count);
-
     const arrayData = [
       count['age0to1'],
       count['age2to3'],
