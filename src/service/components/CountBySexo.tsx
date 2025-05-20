@@ -16,7 +16,7 @@ export function countBySexoOptions() : ApexOptions
           type: 'donut',
         },
         colors: ['#3C50E0', '#E03C3C', '#8FD0EF'],
-        labels: ['Homens', 'Mulheres'],
+        labels: ['Masculino', 'Feminino'],
         legend: {
           show: true,
           position: 'bottom',

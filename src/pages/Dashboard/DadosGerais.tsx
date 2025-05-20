@@ -97,7 +97,7 @@ const App: React.FC = () => {
 
         <div className='xl:col-start-8 xl:col-end-13 col-span-12'>
           <DonutChart 
-            chartTitle='Contagem de casos por sexo'
+            chartTitle='Contagem de casos por gênero'
             options={donutChartOptionsbySexo}
             series={countBySexoSeries}
           />

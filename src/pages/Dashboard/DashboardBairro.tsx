@@ -12,8 +12,11 @@ import AgravoSelector from '../../components/Forms/SelectGroup/AgravoSelector';
 import { CountCard } from '../../components/Cards/CountCard';
 import { notificationsCountData } from '../../service/components/notificationsCount';
 import { useParams } from 'react-router-dom';
+import { countByEpidemiologicalWeekAccumulatedOptions, mountAgravoLineAccumulatedData } from '../../service/components/EpidemiologicalWeekAccumulated';
+import AgravoAccumulatedLineChart from '../../components/Charts/AgravoAccumulatedLineChart';
 
 const lineChartOptionsByEpidemiologicalWeek: ApexOptions = countByEpidemiologicalWeekOptions();
+const lineChartOptionsByEpidemiologicalWeekAccumulated: ApexOptions = countByEpidemiologicalWeekAccumulatedOptions();
 const donutChartOptionsbySexo: ApexOptions = countBySexoOptions();
 const columnGraphicOptions: ApexOptions = countByAgeRangeOptions();
 
@@ -22,6 +25,7 @@ const DashboardBairro: React.FC = () => {
   const [agravoLineSeries, setAgravoLineSeries] = useState<any>([]);
   const [countBySexoSeries, setCountBySexoSeries] = useState<any>([]);
   const [ageRangeCategories, setAgeRangeCategories] = useState<any>([]);
+  const [agravoLineAccumulatedSeries, setAgravoLineAccumulatedSeries] = useState<any>([])
   const [notificationsCount, setNotificationsCount] = useState<any>(0);
   const [agravoSelected, setAgravoSelected] = useState<string>(() => {
     return localStorage.getItem('agravoSelected') || 'dengue';
@@ -36,6 +40,7 @@ const DashboardBairro: React.FC = () => {
       mountDonutCountBySexo(setCountBySexoSeries, yearSelected, agravoSelected, bairro);
       mountColumnCountByAgeRange(setAgeRangeCategories, yearSelected, agravoSelected, bairro);
       notificationsCountData(setNotificationsCount, yearSelected, agravoSelected, bairro);
+      mountAgravoLineAccumulatedData(setAgravoLineAccumulatedSeries, yearSelected, agravoSelected, bairro);
     }
   }, [yearSelected, agravoSelected, bairro]);
 
@@ -70,6 +75,13 @@ const DashboardBairro: React.FC = () => {
           <AgravoLineChart 
             options={lineChartOptionsByEpidemiologicalWeek}
             series={agravoLineSeries}
+          />
+        </div>
+
+        <div className="col-start-1 col-end-13">
+          <AgravoAccumulatedLineChart 
+            options={lineChartOptionsByEpidemiologicalWeekAccumulated}
+            series={agravoLineAccumulatedSeries}
           />
         </div>
 
