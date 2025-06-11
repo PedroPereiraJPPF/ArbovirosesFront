@@ -46,22 +46,37 @@ const DashboardBairro: React.FC = () => {
 
   return (
     <DefaultLayout>
-      <div className='mb-4'>
-        <h1 className='text-2xl font-bold text-black dark:text-white'>
-          {bairro}
-        </h1>
-      </div>
+      <div className='mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between rounded-lg bg-white dark:bg-boxdark-2 p-4 shadow-md'>
+        <div>
+          <nav>
+            <ol className="flex items-center gap-2">
+              <li><p className="font-medium">Painel</p></li>
+              <li className="font-medium text-primary">/ {bairro}</li>
+            </ol>
+          </nav>
+          <h2 className='text-2xl mt-2 font-bold text-black dark:text-white flex items-center gap-2'>
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M20 9v11a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V9"/>
+              <path d="M9 22V12h6v10"/>
+              <path d="M2 10.6L12 2l10 8.6"/>
+            </svg>
+            Análise Epidemiológica
+          </h2>
+        </div>
 
-      <div className='flex justify-end gap-x-2 items-center'>
-        <YearSelector 
-          yearSelected={yearSelected}
-          setYearSelected={setYearSelected}
-        />
-        <AgravoSelector 
-          agravoSelected={agravoSelected}
-          setAgravoSelected={setAgravoSelected}
-        />
+        {/* Lado Direito: Filtros */}
+        <div className='flex gap-x-4 items-center'>
+            <YearSelector 
+              yearSelected={yearSelected}
+              setYearSelected={setYearSelected}
+            />
+            <AgravoSelector 
+              agravoSelected={agravoSelected}
+              setAgravoSelected={setAgravoSelected}
+            />
+        </div>
       </div>
+      {/* ========== FIM DO CABEÇALHO ========== */}
 
       <div className='flex flex-col md:flex-row gap-4'>
         <CountCard
