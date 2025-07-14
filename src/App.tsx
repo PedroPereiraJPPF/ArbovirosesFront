@@ -74,7 +74,7 @@ function App() {
           }
         />
         <Route 
-          path="/dashboard/bairro/:bairro"
+          path="/dashboard/bairro"
           element={
             <>
               <PageTitle title="Dados do Bairro"/>

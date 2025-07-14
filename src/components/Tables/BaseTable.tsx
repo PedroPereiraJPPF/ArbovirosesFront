@@ -1,11 +1,16 @@
 import { NeighborhoodInfo } from "../Entity/NeighborhoodInfo";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 interface BaseTableProps {
   neighborhoodData: NeighborhoodInfo[]
 }
 
 const BaseTable: React.FC<BaseTableProps> = ({neighborhoodData}) => {
+  const navigate = useNavigate();
+
+  const irParaDashboardBairro = (nameBairro: String) => {
+    navigate("/dashboard/bairro", { state: { bairro: nameBairro } });
+  };
 
   return (
     <div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
@@ -19,9 +24,6 @@ const BaseTable: React.FC<BaseTableProps> = ({neighborhoodData}) => {
               <th className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white">
                 Notificados
               </th>
-              {/* <th className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white">
-                Descartados
-              </th> */}
               <th className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white">
                 Curados
               </th>
@@ -37,25 +39,18 @@ const BaseTable: React.FC<BaseTableProps> = ({neighborhoodData}) => {
             {neighborhoodData.map((neighborhoodItem, key) => (
               <tr key={key}>
                 <td className="border-b border-[#eee] py-5 px-4 pl-9 dark:border-strokedark xl:pl-11">
-                  <Link 
-                    to={`/dashboard/bairro/${neighborhoodItem.nomeBairro}`}
-                    className="font-medium text-primary hover:underline"
-                    target="_blank"
-                    rel="noopener noreferrer"
+                  <p 
+                    onClick={() => irParaDashboardBairro(neighborhoodItem.nomeBairro)}
+                    className="font-medium text-primary hover:underline hover:cursor-pointer dark:text-primarydark"
                   >
                     {neighborhoodItem.nomeBairro}
-                  </Link>
+                  </p>
                 </td>
                 <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                   <p className="text-black dark:text-white">
                     {neighborhoodItem.casosReportados}
                   </p>
                 </td>
-                {/* <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                  <p className="text-black dark:text-white">
-                    {neighborhoodItem.descartados}
-                  </p>
-                </td> */}
                 <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                   <p className="text-black dark:text-white">
                     {neighborhoodItem.curados}

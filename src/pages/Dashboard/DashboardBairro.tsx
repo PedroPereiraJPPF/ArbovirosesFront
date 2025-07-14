@@ -11,9 +11,9 @@ import YearSelector from '../../components/Forms/SelectGroup/YearSelector';
 import AgravoSelector from '../../components/Forms/SelectGroup/AgravoSelector';
 import { CountCard } from '../../components/Cards/CountCard';
 import { notificationsCountData } from '../../service/components/notificationsCount';
-import { useParams } from 'react-router-dom';
 import { countByEpidemiologicalWeekAccumulatedOptions, mountAgravoLineAccumulatedData } from '../../service/components/EpidemiologicalWeekAccumulated';
 import AgravoAccumulatedLineChart from '../../components/Charts/AgravoAccumulatedLineChart';
+import { useLocation } from 'react-router-dom';
 
 const lineChartOptionsByEpidemiologicalWeek: ApexOptions = countByEpidemiologicalWeekOptions();
 const lineChartOptionsByEpidemiologicalWeekAccumulated: ApexOptions = countByEpidemiologicalWeekAccumulatedOptions();
@@ -21,7 +21,8 @@ const donutChartOptionsbySexo: ApexOptions = countBySexoOptions();
 const columnGraphicOptions: ApexOptions = countByAgeRangeOptions();
 
 const DashboardBairro: React.FC = () => {
-  const { bairro } = useParams();
+  const bairro = useLocation().state?.bairro;
+
   const [agravoLineSeries, setAgravoLineSeries] = useState<any>([]);
   const [countBySexoSeries, setCountBySexoSeries] = useState<any>([]);
   const [ageRangeCategories, setAgeRangeCategories] = useState<any>([]);
