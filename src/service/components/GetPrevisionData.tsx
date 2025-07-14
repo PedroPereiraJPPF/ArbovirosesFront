@@ -6,7 +6,7 @@ export async function mountPrevisionCasesData(setAgravoLineSeries: Function, set
     let previsionData = null;
 
     if (data.dengue_cases != "" && data.rainfall_index != "" && data.air_humidity != "" && data.mean_temperature != "") {
-        previsionData = await postApiData('/predict', data, 'POST', 'http://localhost:8000');
+        previsionData = await postApiData('/predict', data, 'POST', 'https://arboviroses-python.onrender.com');
     }
 
     const apiData = await postApiData('/notifications/count/byYears', years, 'POST');
