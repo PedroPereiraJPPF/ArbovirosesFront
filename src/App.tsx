@@ -10,6 +10,8 @@ import CarregarDados from './pages/Dashboard/CarregarDados';
 import PrevisaoDeCasos from './pages/Dashboard/PrevisaoDeCasos';
 import DadosGeograficos from './pages/Dashboard/DadosGeograficos';
 import DashboardBairro from './pages/Dashboard/DashboardBairro';
+import CarregarLira from './pages/Lira/CarregarLira';
+import DashboardLira from './pages/Lira/DashboardLira';
 
 function App() {
   const [loading, setLoading] = useState<boolean>(true);
@@ -79,6 +81,24 @@ function App() {
             <>
               <PageTitle title="Dados do Bairro"/>
               <DashboardBairro />
+            </>
+          }
+        />
+        <Route
+          path="/lira/carregar"
+          element={
+            <>
+              <PageTitle title="Carregar Dados LIRA" />
+              <CarregarLira />
+            </>
+          }
+        />
+        <Route
+          path="/lira/dashboard"
+          element={
+            <>
+              <PageTitle title="Dashboard LIRA" />
+              <DashboardLira />
             </>
           }
         />
