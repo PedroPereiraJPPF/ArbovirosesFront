@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
 import DefaultLayout from '../../layout/DefaultLayout';
@@ -9,6 +9,25 @@ const CarregarLira: React.FC = () => {
   const [liraNumber, setLiraNumber] = useState<number>(1);
   const [message, setMessage] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [existingDataCount, setExistingDataCount] = useState<number | null>(null);
+  const [checkingExistingData, setCheckingExistingData] = useState<boolean>(false);
+
+  // Check for existing data when year or liraNumber changes
+  useEffect(() => {
+    checkExistingData();
+  }, [year, liraNumber]);
+
+  const checkExistingData = async () => {
+    setCheckingExistingData(true);
+    try {
+      const response = await axios.get(`http://localhost:8080/api/lira/filter?ano=${year}&liraNumber=${liraNumber}`);
+      setExistingDataCount(response.data.length);
+    } catch (error) {
+      setExistingDataCount(0);
+    } finally {
+      setCheckingExistingData(false);
+    }
+  };
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
@@ -44,8 +63,17 @@ const CarregarLira: React.FC = () => {
           'Content-Type': 'multipart/form-data',
         },
       });
-      setMessage(`Arquivo LIRA ${liraNumber}/${year} enviado com sucesso! ${response.data.length} registros processados.`);
+      
+      const wasOverwritten = existingDataCount && existingDataCount > 0;
+      const overwriteMessage = wasOverwritten 
+        ? ` Os ${existingDataCount} registros anteriores foram substituídos.` 
+        : '';
+      
+      setMessage(`Arquivo LIRA ${liraNumber}/${year} enviado com sucesso! ${response.data.length} registros processados.${overwriteMessage}`);
+      
       setFile(null);
+      setExistingDataCount(response.data.length); // Update with new count
+      
       // Reset file input
       const fileInput = document.getElementById('lira-file') as HTMLInputElement;
       if (fileInput) fileInput.value = '';
@@ -122,6 +150,24 @@ const CarregarLira: React.FC = () => {
                 </p>
               </div>
 
+              {/* Warning for existing data */}
+              {!checkingExistingData && existingDataCount !== null && existingDataCount > 0 && (
+                <div className="mb-6 p-4 bg-amber-50 text-amber-800 border border-amber-200 rounded-md dark:bg-amber-900/20 dark:text-amber-400 dark:border-amber-900/50">
+                  <div className="flex items-center">
+                    <svg className="w-5 h-5 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd"/>
+                    </svg>
+                    <div>
+                      <p className="font-medium">Atenção: Dados Existentes</p>
+                      <p className="text-sm mt-1">
+                        Já existem <strong>{existingDataCount} registros</strong> para o LIRA {liraNumber} de {year}. 
+                        Ao enviar um novo arquivo, todos os dados anteriores serão <strong>substituídos</strong>.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )}
+
               <button
                 type="submit"
                 disabled={isLoading}
@@ -182,12 +228,21 @@ const CarregarLira: React.FC = () => {
                   <div className="text-xs text-gray-600 dark:text-gray-400">Chuvoso</div>
                 </div>
               </div>
-              <div className="mt-6 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-900/50">
-                <p className="text-sm text-blue-800 dark:text-blue-400">
-                  <strong>Importante:</strong> Certifique-se de que o arquivo Excel está no formato correto, 
-                  com as colunas na ordem esperada: Bairros, Total de Imóveis Inspecionados, 
-                  Total de Imóveis Positivos, Índice de Infestação Predial, etc.
-                </p>
+              <div className="mt-6 space-y-4">
+                <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-900/50">
+                  <p className="text-sm text-blue-800 dark:text-blue-400">
+                    <strong>Formato do Arquivo:</strong> Certifique-se de que o arquivo Excel está no formato correto, 
+                    com as colunas na ordem esperada: Bairros, Total de Imóveis Inspecionados, 
+                    Total de Imóveis Positivos, Índice de Infestação Predial, etc.
+                  </p>
+                </div>
+                <div className="p-4 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg border border-yellow-200 dark:border-yellow-900/50">
+                  <p className="text-sm text-yellow-800 dark:text-yellow-400">
+                    <strong>Substituição de Dados:</strong> Se já existirem dados para o mesmo ano e trimestre, 
+                    eles serão completamente substituídos pelos novos dados do arquivo enviado. 
+                    Esta operação não pode ser desfeita.
+                  </p>
+                </div>
               </div>
             </div>
           </div>
