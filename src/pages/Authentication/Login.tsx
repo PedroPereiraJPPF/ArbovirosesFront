@@ -1,67 +1,64 @@
 import React, { FormEvent, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
 import Logo from '../../images/logo/Logo.png';
 import DefaultLayout from '../../layout/DefaultLayout';
-import { SuccessModal } from '../../components/Modals/SuccessModal';
 import { cpfMask } from '../../common/input/CpfMask';
 import { ErrorModal } from '../../components/Modals/ErrorModal';
+import { useAuth } from '../../contexts/AuthContext';
 
 const SignIn: React.FC = () => {
-  const baseApiUrl = process.env.REACT_APP_API_URL ?? "" 
-  const navigate = useNavigate()
-  const [cpf, setCpf] = useState<string>("")
-  const [password, setPassword] = useState<string>("")
-  const [loadingData, setLoadingData] = useState<boolean>(false)
-  const [errorMessage, setErrorMessage] = useState<string | false>('')
-  const [successOpenModal, setSuccessOpenModal] = useState<boolean>(false)
-  const [errorModalOpen, setErrorModalOpen] = useState<boolean>(false)
+  const baseApiUrl = process.env.REACT_APP_API_URL ?? "";
+  const location = useLocation();
+  const { login } = useAuth();
+  
+  const [cpf, setCpf] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [loadingData, setLoadingData] = useState<boolean>(false);
+  const [errorMessage, setErrorMessage] = useState<string | false>('');
+  const [errorModalOpen, setErrorModalOpen] = useState<boolean>(false);
 
   const [formData, setFormData] = useState({
     cpf: cpf,
     password: password
-  })
+  });
 
-  function handleSucessModalClose() 
-  {
-    setSuccessOpenModal(false)
-    navigate('/')
+  function handleErrorModalClose() {
+    setErrorModalOpen(false);
   }
 
-  function handleErrorModalClose() 
-  {
-    setErrorModalOpen(false)
-  }
-
-  async function handleSetCpf(event: React.ChangeEvent<HTMLInputElement>)
-  {
-    const cpfMaskValue = cpfMask(event.target.value)
+  async function handleSetCpf(event: React.ChangeEvent<HTMLInputElement>) {
+    const cpfMaskValue = cpfMask(event.target.value);
 
     setCpf(cpfMaskValue);
 
     setFormData({
       ...formData,
       cpf: cpfMaskValue
-    })
+    });
   }
 
-  async function handleSetPassword(event: React.ChangeEvent<HTMLInputElement>)
-  {
+  async function handleSetPassword(event: React.ChangeEvent<HTMLInputElement>) {
     setPassword(event.target.value);
 
     setFormData({
       ...formData,
       password: event.target.value
-    })
+    });
   }
 
-  async function handleSubmit(event: FormEvent<HTMLFormElement>) 
-  {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     try {
-      event.preventDefault()
+      event.preventDefault();
+
+      if (!formData.cpf.trim() || !formData.password.trim()) {
+        setErrorMessage('Por favor, preencha todos os campos.');
+        setErrorModalOpen(true);
+        return;
+      }
 
       setLoadingData(true);
-      setErrorMessage(false)
+      setErrorMessage(false);
       
       const response = await fetch(baseApiUrl + '/auth/login', {
         method: 'POST',
@@ -69,28 +66,58 @@ const SignIn: React.FC = () => {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify(formData)
-      })
+      });
 
       if (response.ok) {
-        const data = await response.json()
+        const data = await response.json();
 
-        localStorage.setItem("accessToken", data.jwtToken)
-        localStorage.setItem("token", data.token)
-        localStorage.setItem("userName", data.fullName)
+        if (!data.jwtToken || !data.token || !data.fullName) {
+          throw new Error('Resposta de login inválida');
+        }
 
-        setSuccessOpenModal(true)
-      } 
+        // Use the auth context to handle login
+        console.log('Login: Calling auth context login');
+        await login(data.jwtToken, data.token, {
+          fullName: data.fullName,
+          cpf: formData.cpf
+        });
 
-      if (response.status === 400) {
-        setErrorMessage("CPF ou Senha inválidos")
-      }
-
-      if (response.status === 500) {
-        setErrorModalOpen(true)
+        console.log('Login: Auth context login completed, navigating...');
+        // Navigate directly to dashboard after successful login
+        const from = location.state?.from?.pathname || '/';
+        console.log('Login: Navigating to', from);
+        
+        // Force navigation using window.location to ensure clean redirect
+        window.location.href = from;
+      } else {
+        // Handle different error status codes
+        const errorData = await response.json().catch(() => ({}));
+        
+        if (response.status === 400) {
+          setErrorMessage(errorData.message || "CPF ou Senha inválidos");
+          setErrorModalOpen(true);
+        } else if (response.status === 401) {
+          setErrorMessage("Credenciais inválidas");
+          setErrorModalOpen(true);
+        } else if (response.status === 500) {
+          setErrorMessage("Erro interno do servidor. Tente novamente mais tarde.");
+          setErrorModalOpen(true);
+        } else {
+          setErrorMessage("Erro inesperado. Tente novamente.");
+          setErrorModalOpen(true);
+        }
       }
 
     } catch (error) {
-      setErrorModalOpen(true)
+      console.error('Login error:', error);
+      
+      if (error instanceof Error) {
+        setErrorMessage(error.message);
+      } else {
+        setErrorMessage("Erro de conexão. Verifique sua internet e tente novamente.");
+      }
+      
+      setErrorModalOpen(true);
     } finally {
       setLoadingData(false);
     }
@@ -339,13 +366,6 @@ const SignIn: React.FC = () => {
           </div>
         </div>
       </div>
-      <SuccessModal
-        openModal={successOpenModal}
-        handleModalClose={handleSucessModalClose}
-        message='Login realizado com sucesso!'
-        position='center'
-      />
-
       <ErrorModal
         openModal={errorModalOpen}
         handleModalClose={handleErrorModalClose}

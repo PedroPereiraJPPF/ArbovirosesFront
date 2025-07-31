@@ -3,6 +3,7 @@ import { Route, Routes, useLocation } from 'react-router-dom';
 
 import Loader from './common/Loader';
 import PageTitle from './components/PageTitle';
+import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute';
 import SignIn from './pages/Authentication/Login';
 import SignUp from './pages/Authentication/Register';
 import DadosGerais from './pages/Dashboard/DadosGerais';
@@ -51,10 +52,10 @@ function App() {
         <Route 
           path="/carregarDados"
           element={
-            <>
+            <ProtectedRoute>
               <PageTitle title="Carregar dados"/>
               <CarregarDados />
-            </>
+            </ProtectedRoute>
           }
         />
         <Route 
@@ -87,10 +88,10 @@ function App() {
         <Route
           path="/lira/carregar"
           element={
-            <>
+            <ProtectedRoute>
               <PageTitle title="Carregar Dados LIRA" />
               <CarregarLira />
-            </>
+            </ProtectedRoute>
           }
         />
         <Route
@@ -114,10 +115,10 @@ function App() {
         <Route
           path="/auth/registrar"
           element={
-            <>
+            <ProtectedRoute>
               <PageTitle title="Registrar" />
               <SignUp />
-            </>
+            </ProtectedRoute>
           }
         />
       </Routes>

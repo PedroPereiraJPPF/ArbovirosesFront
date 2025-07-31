@@ -1,19 +1,36 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useAuth } from '../../contexts/AuthContext';
 
 const DropdownUser = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
-
+  const authContext = useAuth();
+  
   const trigger = useRef<any>(null);
   const dropdown = useRef<any>(null);
-
-  const destroyUserSection = () => {
-    localStorage.removeItem("token")
-    localStorage.removeItem("accessToken")
-    localStorage.removeItem("userName")
-
-    window.location.reload();
+  
+  // Defensive check - if auth context is not available, don't render
+  if (!authContext) {
+    return null;
   }
+  
+  const { user, logout, isAuthenticated } = authContext;
+  
+  // Don't render if not authenticated
+  if (!isAuthenticated) {
+    return null;
+  }
+
+  const handleLogout = () => {
+    setDropdownOpen(false);
+    try {
+      logout();
+    } catch (error) {
+      console.error('Error during logout:', error);
+      // Fallback: force page reload
+      window.location.href = '/auth/login';
+    }
+  };
 
   // close on click outside
   useEffect(() => {
@@ -51,7 +68,7 @@ const DropdownUser = () => {
       >
         <span className="hidden text-right lg:block">
           <span className="block text-sm font-medium text-black dark:text-white">
-            { localStorage.getItem('userName') ?? '' }
+            {user?.fullName || 'Usuário'}
           </span>
         </span>
       </Link>
@@ -66,8 +83,9 @@ const DropdownUser = () => {
         }`}
       >
         <button 
-          onClick={() => destroyUserSection()}
-          className="flex items-center gap-3.5 px-6 py-4 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base">
+          onClick={handleLogout}
+          className="flex items-center gap-3.5 px-6 py-4 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base"
+        >
           <svg
             className="fill-current"
             width="22"
