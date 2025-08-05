@@ -8,6 +8,8 @@ interface LiraData {
   bairro: string;
   indiceInfestacaoPredial: number;
   indiceBreteau: number;
+  liraNumber?: number;
+  ano?: number;
 }
 
 const DashboardLira: React.FC = () => {
@@ -148,75 +150,181 @@ const DashboardLira: React.FC = () => {
         </div>
 
         {/* Chart Section */}
-        <div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5">
-          <div className="flex flex-col gap-6">
-            <div className="flex justify-between items-center">
-              <div>
-                <h4 className="text-lg font-semibold text-black dark:text-white">
-                  {getChartTitle()}
-                </h4>
-                <p className="text-sm text-gray-600 dark:text-gray-400">
-                  Índices de Infestação Predial e Bretau por Bairro
-                </p>
+        {viewMode === 'single' ? (
+          <div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5">
+            <div className="flex flex-col gap-6">
+              <div className="flex justify-between items-center">
+                <div>
+                  <h4 className="text-lg font-semibold text-black dark:text-white">
+                    {getChartTitle()}
+                  </h4>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                    Índices de Infestação Predial e Bretau por Bairro
+                  </p>
+                </div>
+                
+                {!loading && !error && liraData.length > 0 && (
+                  <div className="text-sm text-gray-600 dark:text-gray-400">
+                    {liraData.length} bairros encontrados
+                  </div>
+                )}
               </div>
-              
-              {!loading && !error && liraData.length > 0 && (
-                <div className="text-sm text-gray-600 dark:text-gray-400">
-                  {liraData.length} bairros encontrados
-                </div>
-              )}
-            </div>
 
-            <div className="min-h-[400px] flex items-center justify-center">
-              {loading ? (
-                <div className="flex flex-col items-center gap-4">
-                  <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">Carregando dados...</p>
-                </div>
-              ) : error ? (
-                <div className="flex flex-col items-center gap-4 p-8 text-center">
-                  <div className="w-16 h-16 bg-red-100 dark:bg-red-900/20 rounded-full flex items-center justify-center">
-                    <svg className="w-8 h-8 text-red-600 dark:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
-                    </svg>
+              <div className="min-h-[400px] flex items-center justify-center">
+                {loading ? (
+                  <div className="flex flex-col items-center gap-4">
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+                    <p className="text-sm text-gray-600 dark:text-gray-400">Carregando dados...</p>
                   </div>
-                  <div>
-                    <p className="text-red-600 dark:text-red-400 font-medium">{error}</p>
-                    <button 
-                      onClick={fetchData}
-                      className="mt-2 px-4 py-2 text-sm bg-primary text-white rounded hover:bg-opacity-90"
-                    >
-                      Tentar Novamente
-                    </button>
+                ) : error ? (
+                  <div className="flex flex-col items-center gap-4 p-8 text-center">
+                    <div className="w-16 h-16 bg-red-100 dark:bg-red-900/20 rounded-full flex items-center justify-center">
+                      <svg className="w-8 h-8 text-red-600 dark:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
+                      </svg>
+                    </div>
+                    <div>
+                      <p className="text-red-600 dark:text-red-400 font-medium">{error}</p>
+                      <button 
+                        onClick={fetchData}
+                        className="mt-2 px-4 py-2 text-sm bg-primary text-white rounded hover:bg-opacity-90"
+                      >
+                        Tentar Novamente
+                      </button>
+                    </div>
                   </div>
-                </div>
-              ) : liraData.length === 0 ? (
-                <div className="flex flex-col items-center gap-4 p-8 text-center">
-                  <div className="w-16 h-16 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center">
-                    <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                    </svg>
+                ) : liraData.length === 0 ? (
+                  <div className="flex flex-col items-center gap-4 p-8 text-center">
+                    <div className="w-16 h-16 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center">
+                      <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                      </svg>
+                    </div>
+                    <div>
+                      <p className="text-gray-600 dark:text-gray-400 font-medium">
+                        Nenhum dado encontrado
+                      </p>
+                      <p className="text-sm text-gray-500 dark:text-gray-500 mt-1">
+                        Não há dados para o LIRA {liraNumber} de {year}
+                      </p>
+                    </div>
                   </div>
-                  <div>
-                    <p className="text-gray-600 dark:text-gray-400 font-medium">
-                      Nenhum dado encontrado
-                    </p>
-                    <p className="text-sm text-gray-500 dark:text-gray-500 mt-1">
-                      {viewMode === 'single' 
-                        ? `Não há dados para o LIRA ${liraNumber} de ${year}`
-                        : `Não há dados para o ano de ${year}`
-                      }
-                    </p>
+                ) : (
+                  <div className="w-full">
+                    <ChartLiraPorBairro data={liraData} />
                   </div>
-                </div>
-              ) : (
-                <div className="w-full">
-                  <ChartLiraPorBairro data={liraData} />
-                </div>
-              )}
+                )}
+              </div>
             </div>
           </div>
-        </div>
+        ) : (
+          /* Modo "Todos os LIRAs" - Exibir 4 gráficos de barra separados */
+          <div className="space-y-6">
+            {loading ? (
+              <div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5">
+                <div className="min-h-[400px] flex items-center justify-center">
+                  <div className="flex flex-col items-center gap-4">
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+                    <p className="text-sm text-gray-600 dark:text-gray-400">Carregando dados de todos os LIRAs...</p>
+                  </div>
+                </div>
+              </div>
+            ) : error ? (
+              <div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5">
+                <div className="min-h-[400px] flex items-center justify-center">
+                  <div className="flex flex-col items-center gap-4 p-8 text-center">
+                    <div className="w-16 h-16 bg-red-100 dark:bg-red-900/20 rounded-full flex items-center justify-center">
+                      <svg className="w-8 h-8 text-red-600 dark:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
+                      </svg>
+                    </div>
+                    <div>
+                      <p className="text-red-600 dark:text-red-400 font-medium">{error}</p>
+                      <button 
+                        onClick={fetchData}
+                        className="mt-2 px-4 py-2 text-sm bg-primary text-white rounded hover:bg-opacity-90"
+                      >
+                        Tentar Novamente
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ) : liraData.length === 0 ? (
+              <div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5">
+                <div className="min-h-[400px] flex items-center justify-center">
+                  <div className="flex flex-col items-center gap-4 p-8 text-center">
+                    <div className="w-16 h-16 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center">
+                      <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                      </svg>
+                    </div>
+                    <div>
+                      <p className="text-gray-600 dark:text-gray-400 font-medium">
+                        Nenhum dado encontrado
+                      </p>
+                      <p className="text-sm text-gray-500 dark:text-gray-500 mt-1">
+                        Não há dados para o ano de {year}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              /* Gráficos individuais para cada LIRA */
+              <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+                {[1, 2, 3, 4].map((liraNum) => {
+                  const liraFilteredData = liraData.filter(item => (item.liraNumber || 1) === liraNum);
+                  const trimesterNames = ['1º Trimestre', '2º Trimestre', '3º Trimestre', '4º Trimestre'];
+                  
+                  return (
+                    <div key={liraNum} className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5">
+                      <div className="flex flex-col gap-6">
+                        <div className="flex justify-between items-center">
+                          <div>
+                            <h4 className="text-lg font-semibold text-black dark:text-white">
+                              LIRA {liraNum} - {trimesterNames[liraNum - 1]} de {year}
+                            </h4>
+                            <p className="text-sm text-gray-600 dark:text-gray-400">
+                              Índices de Infestação Predial e Bretau por Bairro
+                            </p>
+                          </div>
+                          
+                          {liraFilteredData.length > 0 && (
+                            <div className="text-sm text-gray-600 dark:text-gray-400">
+                              {liraFilteredData.length} bairros
+                            </div>
+                          )}
+                        </div>
+
+                        <div className="min-h-[350px] flex items-center justify-center">
+                          {liraFilteredData.length === 0 ? (
+                            <div className="flex flex-col items-center gap-4 p-8 text-center">
+                              <div className="w-12 h-12 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center">
+                                <svg className="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                </svg>
+                              </div>
+                              <div>
+                                <p className="text-gray-600 dark:text-gray-400 text-sm">
+                                  Sem dados para este período
+                                </p>
+                              </div>
+                            </div>
+                          ) : (
+                            <div className="w-full">
+                              <ChartLiraPorBairro data={liraFilteredData} />
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        )}
 
         {/* Statistics Cards */}
         {!loading && !error && liraData.length > 0 && (
@@ -230,7 +338,10 @@ const DashboardLira: React.FC = () => {
               <div className="mt-4 flex items-end justify-between">
                 <div>
                   <h4 className="text-title-md font-bold text-black dark:text-white">
-                    {liraData.length}
+                    {viewMode === 'single' 
+                      ? liraData.length 
+                      : new Set(liraData.map(d => d.bairro)).size
+                    }
                   </h4>
                   <span className="text-sm font-medium">Bairros Analisados</span>
                 </div>
@@ -280,9 +391,74 @@ const DashboardLira: React.FC = () => {
                   <h4 className="text-title-md font-bold text-black dark:text-white">
                     {(liraData.reduce((sum, d) => sum + (d.indiceInfestacaoPredial || 0), 0) / liraData.length).toFixed(2)}%
                   </h4>
-                  <span className="text-sm font-medium">Média Índice Predial</span>
+                  <span className="text-sm font-medium">
+                    {viewMode === 'single' ? 'Média Índice Predial' : 'Média Geral Predial'}
+                  </span>
                 </div>
               </div>
+            </div>
+          </div>
+        )}
+
+        {/* Summary Cards for "All LIRAs" mode */}
+        {viewMode === 'all' && !loading && !error && liraData.length > 0 && (
+          <div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5">
+            <div className="mb-6">
+              <h4 className="text-lg font-semibold text-black dark:text-white">
+                Resumo por Período LIRA
+              </h4>
+              <p className="text-sm text-gray-600 dark:text-gray-400">
+                Estatísticas detalhadas de cada trimestre
+              </p>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              {[1, 2, 3, 4].map((liraNum) => {
+                const liraFilteredData = liraData.filter(item => (item.liraNumber || 1) === liraNum);
+                const trimesterNames = ['1º Trimestre', '2º Trimestre', '3º Trimestre', '4º Trimestre'];
+                const avgPredial = liraFilteredData.length > 0 
+                  ? liraFilteredData.reduce((sum, d) => sum + (d.indiceInfestacaoPredial || 0), 0) / liraFilteredData.length
+                  : 0;
+                const maxPredial = liraFilteredData.length > 0 
+                  ? Math.max(...liraFilteredData.map(d => d.indiceInfestacaoPredial || 0))
+                  : 0;
+
+                return (
+                  <div key={liraNum} className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4">
+                    <div className="text-center">
+                      <h5 className="font-semibold text-black dark:text-white mb-2">
+                        LIRA {liraNum}
+                      </h5>
+                      <p className="text-xs text-gray-600 dark:text-gray-400 mb-3">
+                        {trimesterNames[liraNum - 1]}
+                      </p>
+                      
+                      <div className="space-y-2">
+                        <div>
+                          <p className="text-xs text-gray-600 dark:text-gray-400">Bairros</p>
+                          <p className="text-lg font-bold text-black dark:text-white">
+                            {liraFilteredData.length}
+                          </p>
+                        </div>
+                        
+                        <div>
+                          <p className="text-xs text-gray-600 dark:text-gray-400">Média Predial</p>
+                          <p className="text-sm font-semibold text-primary">
+                            {avgPredial.toFixed(2)}%
+                          </p>
+                        </div>
+                        
+                        <div>
+                          <p className="text-xs text-gray-600 dark:text-gray-400">Máximo</p>
+                          <p className="text-sm font-semibold text-red-500">
+                            {maxPredial.toFixed(2)}%
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           </div>
         )}
