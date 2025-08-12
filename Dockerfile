@@ -15,17 +15,19 @@ COPY . .
 # Build da aplicação
 RUN npm run build
 
-# Estágio de produção com Nginx
-FROM nginx:alpine
+# Estágio de produção com servidor HTTP simples
+FROM node:18-alpine
+
+# Instalar um servidor HTTP simples
+RUN npm install -g serve
 
 # Copiar arquivos buildados
-COPY --from=builder /app/dist /usr/share/nginx/html
+COPY --from=builder /app/dist /app
 
-# Copiar configuração customizada do nginx
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+WORKDIR /app
 
-# Expor porta 3000 (em vez da 80 padrão)
+# Expor porta 3000
 EXPOSE 3000
 
-# Comando para iniciar o nginx na porta 3000
-CMD ["sh", "-c", "sed -i 's/listen 80/listen 3000/g' /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"]
+# Comando para iniciar o servidor na porta 3000
+CMD ["serve", "-s", ".", "-l", "3000"]
