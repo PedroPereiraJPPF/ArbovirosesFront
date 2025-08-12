@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
 import DefaultLayout from '../../layout/DefaultLayout';
 import ChartLiraPorBairro from '../../components/Charts/ChartLiraPorBairro';
+import api from '../../service/api/Api';
 
 interface LiraData {
   bairro: string;
@@ -30,9 +30,9 @@ const DashboardLira: React.FC = () => {
     try {
       let response;
       if (viewMode === 'single') {
-        response = await axios.get(`http://localhost:8080/api/lira/filter?ano=${year}&liraNumber=${liraNumber}`);
+        response = await api.get(`/lira/filter?ano=${year}&liraNumber=${liraNumber}`);
       } else {
-        response = await axios.get(`http://localhost:8080/api/lira?ano=${year}`);
+        response = await api.get(`/lira?ano=${year}`);
       }
       setLiraData(
         response.data.map((item: any) => ({

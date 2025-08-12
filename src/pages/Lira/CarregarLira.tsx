@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
 import DefaultLayout from '../../layout/DefaultLayout';
+import api from '../../service/api/Api';
 
 const CarregarLira: React.FC = () => {
   const [file, setFile] = useState<File | null>(null);
@@ -20,7 +20,7 @@ const CarregarLira: React.FC = () => {
   const checkExistingData = async () => {
     setCheckingExistingData(true);
     try {
-      const response = await axios.get(`http://localhost:8080/api/lira/filter?ano=${year}&liraNumber=${liraNumber}`);
+      const response = await api.get(`/lira/filter?ano=${year}&liraNumber=${liraNumber}`);
       setExistingDataCount(response.data.length);
     } catch (error) {
       setExistingDataCount(0);
@@ -58,7 +58,7 @@ const CarregarLira: React.FC = () => {
     formData.append('liraNumber', liraNumber.toString());
 
     try {
-      const response = await axios.post('http://localhost:8080/api/lira/upload', formData, {
+      const response = await api.post('/lira/upload', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
