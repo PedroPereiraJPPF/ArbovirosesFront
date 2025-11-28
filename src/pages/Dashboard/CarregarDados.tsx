@@ -138,7 +138,7 @@ const CarregarDados: React.FC = () => {
             const allData = await processFile(file);
             setTotalRecords(allData.length);
 
-            const batchSize = 100;
+            const batchSize = 400;
             let successCount = 0;
             let errorCount = 0;
 
@@ -171,7 +171,7 @@ const CarregarDados: React.FC = () => {
                 setFileName(null);
                 setOpenSuccessModal(true);
             } else {
-                alert(`Processamento concluído com erros. Sucesso: ${successCount}, Erros: ${errorCount}`);
+                alert(`Processamento concluído`);
             }
         } catch (error) {
             console.error("Erro ao processar o arquivo:", error);
