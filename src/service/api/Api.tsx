@@ -86,30 +86,24 @@ api.interceptors.response.use(
                     throw new Error('Invalid token response');
                 }
 
-                // Update tokens
                 localStorage.setItem('accessToken', newAccessToken);
                 if (newRefreshToken) {
                     localStorage.setItem('token', newRefreshToken);
                 }
 
-                // Update the authorization header for the original request
                 if (originalRequest.headers) {
                     originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
                 }
 
-                // Process the queued requests
                 processQueue(null, newAccessToken);
 
-                // Retry the original request
                 return axios(originalRequest);
 
             } catch (refreshError) {
                 console.error('Token refresh failed:', refreshError);
                 
-                // Process queued requests with error
                 processQueue(refreshError, null);
                 
-                // Clear authentication data
                 localStorage.removeItem("token");
                 localStorage.removeItem("accessToken");
                 localStorage.removeItem("userName");
@@ -117,9 +111,8 @@ api.interceptors.response.use(
                 localStorage.removeItem("yearSelected");
                 localStorage.removeItem("agravoSelected");
                 
-                // Redirect to login page
-                if (window.location.pathname !== '/auth/signin' && !window.location.pathname.includes('/auth/')) {
-                    window.location.href = '/auth/signin';
+                if (window.location.pathname !== '/auth/login' && !window.location.pathname.includes('/auth/')) {
+                    window.location.href = '/auth/login';
                 }
                 
                 return Promise.reject(refreshError);
