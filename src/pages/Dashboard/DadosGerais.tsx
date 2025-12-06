@@ -31,6 +31,8 @@ const App: React.FC = () => {
   const [affectedNeighborhoods, setAffectedNeighborhoods] = useState<any>(0)
   const [notificationsCount, setNotificationsCount] = useState<any>(0)
   const [neighborhoodApiData, setNeighborhoodApiData] = useState<NeighborhoodInfo[]>([])
+  const [loading, setLoading] = useState<boolean>(true)
+  const [error, setError] = useState<string | null>(null)
   const [agravoSelected, setAgravoSelected] = useState<string>(() => {
     return localStorage.getItem('agravoSelected') || 'dengue';
   });
@@ -39,16 +41,80 @@ const App: React.FC = () => {
   });
   
   useEffect(() => {
-    mountAgravoLineData(setAgravoLineSeries, yearSelected, agravoSelected);
-    mountAgravoLineAccumulatedData(setAgravoLineAccumulatedSeries, yearSelected, agravoSelected);
-    mountDonutCountBySexo(setCountBySexoSeries, yearSelected, agravoSelected);
-    mountColumnCountByAgeRange(setAgeRangeCategories, yearSelected, agravoSelected);
-    mountNeighborhoodData(setNeighborhoodApiData, yearSelected, agravoSelected);
-    affectedNeighborhoodCount(setAffectedNeighborhoods, yearSelected, agravoSelected);
-    notificationsCountData(setNotificationsCount, yearSelected, agravoSelected);
-    localStorage.setItem('yearSelected', yearSelected);
-    localStorage.setItem('agravoSelected', agravoSelected);
+    const loadData = async () => {
+      setLoading(true);
+      setError(null);
+      
+      try {
+        await Promise.allSettled([
+          mountAgravoLineData(setAgravoLineSeries, yearSelected, agravoSelected),
+          mountAgravoLineAccumulatedData(setAgravoLineAccumulatedSeries, yearSelected, agravoSelected),
+          mountDonutCountBySexo(setCountBySexoSeries, yearSelected, agravoSelected),
+          mountColumnCountByAgeRange(setAgeRangeCategories, yearSelected, agravoSelected),
+          mountNeighborhoodData(setNeighborhoodApiData, yearSelected, agravoSelected),
+          affectedNeighborhoodCount(setAffectedNeighborhoods, yearSelected, agravoSelected),
+          notificationsCountData(setNotificationsCount, yearSelected, agravoSelected),
+        ]);
+        
+        localStorage.setItem('yearSelected', yearSelected);
+        localStorage.setItem('agravoSelected', agravoSelected);
+      } catch (err) {
+        console.error('Erro ao carregar dados:', err);
+        setError('Não foi possível carregar os dados. Por favor, tente novamente.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadData();
   }, [yearSelected, agravoSelected])
+
+  const handleRetry = () => {
+    setError(null);
+    setLoading(true);
+    window.location.reload();
+  };
+
+  if (loading) {
+    return (
+      <DefaultLayout>
+        <div className="flex items-center justify-center min-h-screen">
+          <div className="flex flex-col items-center gap-4">
+            <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-primary"></div>
+            <p className="text-lg text-gray-600 dark:text-gray-400">Carregando dados...</p>
+          </div>
+        </div>
+      </DefaultLayout>
+    );
+  }
+
+  if (error) {
+    return (
+      <DefaultLayout>
+        <div className="flex items-center justify-center min-h-screen">
+          <div className="flex flex-col items-center gap-4 p-8 text-center">
+            <div className="w-20 h-20 bg-red-100 dark:bg-red-900/20 rounded-full flex items-center justify-center">
+              <svg className="w-10 h-10 text-red-600 dark:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
+              </svg>
+            </div>
+            <div>
+              <p className="text-xl font-semibold text-red-600 dark:text-red-400">{error}</p>
+              <p className="text-sm text-gray-600 dark:text-gray-400 mt-2">
+                Verifique sua conexão ou tente novamente mais tarde.
+              </p>
+            </div>
+            <button 
+              onClick={handleRetry}
+              className="mt-4 px-6 py-3 bg-primary text-white rounded-lg hover:bg-opacity-90 transition"
+            >
+              Tentar Novamente
+            </button>
+          </div>
+        </div>
+      </DefaultLayout>
+    );
+  }
 
   return (
     <DefaultLayout>

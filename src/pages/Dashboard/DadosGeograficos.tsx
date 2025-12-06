@@ -7,6 +7,8 @@ import { mountNeighborhoodData } from '../../service/components/NeighborhoodInfo
 
 const App: React.FC = () => {
   const [affectedNeighborhoods, setAffectedNeighborhoods] = useState<any>([])
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
 
   const [agravoSelected, setAgravoSelected] = useState<string>(() => {
     return localStorage.getItem('agravoSelected') || 'dengue';
@@ -47,19 +49,38 @@ const App: React.FC = () => {
   };
   
   useEffect(() => {
-    mountNeighborhoodData(setAffectedNeighborhoods, yearSelected, agravoSelected);
-    localStorage.setItem('yearSelected', yearSelected);
-    localStorage.setItem('agravoSelected', agravoSelected);    
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        await mountNeighborhoodData(setAffectedNeighborhoods, yearSelected, agravoSelected);
+        localStorage.setItem('yearSelected', yearSelected);
+        localStorage.setItem('agravoSelected', agravoSelected);
+      } catch (err) {
+        console.error('Erro ao carregar dados:', err);
+        setError('Erro ao carregar dados dos bairros. Tente novamente.');
+        setAffectedNeighborhoods([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
   }, [yearSelected, agravoSelected]) 
 
-  const heatData = affectedNeighborhoods.map((neighborhood: { nomeBairro: string | number; casosReportados: any; }) => {
-    const coords = cordsNeighborhoods[neighborhood.nomeBairro];
+  const heatData = Array.isArray(affectedNeighborhoods) 
+    ? affectedNeighborhoods
+        .map((neighborhood: { nomeBairro: string | number; casosReportados: any; }) => {
+          if (!neighborhood || !neighborhood.nomeBairro) return null;
+          
+          const coords = cordsNeighborhoods[neighborhood.nomeBairro];
+          if (!coords) return null;
 
-    if (!coords) return null;
-
-    const intensidade = neighborhood.casosReportados;
-    return [...coords, intensidade];
-  }).filter(Boolean);
+          const intensidade = neighborhood.casosReportados ?? 0;
+          return [...coords, intensidade];
+        })
+        .filter(Boolean)
+    : [];
 
   return (
     <DefaultLayout>
@@ -76,7 +97,28 @@ const App: React.FC = () => {
 
       <div className='h-2/3'>
         <h1>Mapa de Calor de Mossoró</h1>
-        <HeatMap data={heatData} />
+        
+        {loading && (
+          <div className="text-center py-8">
+            <p className="text-lg">Carregando dados...</p>
+          </div>
+        )}
+
+        {error && (
+          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+            <p>{error}</p>
+          </div>
+        )}
+
+        {!loading && !error && heatData.length === 0 && (
+          <div className="text-center py-8">
+            <p className="text-lg">Nenhum dado disponível para exibição</p>
+          </div>
+        )}
+
+        {!loading && !error && heatData.length > 0 && (
+          <HeatMap data={heatData} />
+        )}
       </div>
     </DefaultLayout>
   );

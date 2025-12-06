@@ -12,6 +12,27 @@ const BaseTable: React.FC<BaseTableProps> = ({neighborhoodData}) => {
     navigate("/dashboard/bairro", { state: { bairro: nameBairro } });
   };
 
+  // Validação de dados
+  if (!neighborhoodData || !Array.isArray(neighborhoodData)) {
+    return (
+      <div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
+        <p className="text-center py-4 text-black dark:text-white">
+          Nenhum dado disponível
+        </p>
+      </div>
+    );
+  }
+
+  if (neighborhoodData.length === 0) {
+    return (
+      <div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
+        <p className="text-center py-4 text-black dark:text-white">
+          Nenhum bairro encontrado
+        </p>
+      </div>
+    );
+  }
+
   return (
     <div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
       <div className="max-w-full overflow-x-auto">
@@ -40,30 +61,30 @@ const BaseTable: React.FC<BaseTableProps> = ({neighborhoodData}) => {
               <tr key={key}>
                 <td className="border-b border-[#eee] py-5 px-4 pl-9 dark:border-strokedark xl:pl-11">
                   <p 
-                    onClick={() => irParaDashboardBairro(neighborhoodItem.nomeBairro)}
+                    onClick={() => irParaDashboardBairro(neighborhoodItem.nomeBairro || 'Desconhecido')}
                     className="font-medium text-primary hover:underline hover:cursor-pointer dark:text-primarydark"
                   >
-                    {neighborhoodItem.nomeBairro}
+                    {neighborhoodItem.nomeBairro || 'Não informado'}
                   </p>
                 </td>
                 <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                   <p className="text-black dark:text-white">
-                    {neighborhoodItem.casosReportados}
+                    {neighborhoodItem.casosReportados ?? 0}
                   </p>
                 </td>
                 <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                   <p className="text-black dark:text-white">
-                    {neighborhoodItem.curados}
+                    {neighborhoodItem.curados ?? 0}
                   </p>
                 </td>
                 <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                   <p className="text-black dark:text-white">
-                    {neighborhoodItem.mortePorAgravo}
+                    {neighborhoodItem.mortePorAgravo ?? 0}
                   </p>
                 </td>
                 <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                   <p className="text-black dark:text-white">
-                    {neighborhoodItem.igorados}
+                    {neighborhoodItem.igorados ?? 0}
                   </p>
                 </td>
               </tr>
