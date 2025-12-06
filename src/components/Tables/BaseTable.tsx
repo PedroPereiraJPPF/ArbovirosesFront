@@ -58,7 +58,7 @@ const BaseTable: React.FC<BaseTableProps> = ({neighborhoodData}) => {
           </thead>
           <tbody>
             {neighborhoodData.map((neighborhoodItem, key) => (
-              <tr key={key}>
+              <tr key={`${neighborhoodItem.nomeBairro}-${key}`}>
                 <td className="border-b border-[#eee] py-5 px-4 pl-9 dark:border-strokedark xl:pl-11">
                   <p 
                     onClick={() => irParaDashboardBairro(neighborhoodItem.nomeBairro || 'Desconhecido')}
@@ -84,7 +84,7 @@ const BaseTable: React.FC<BaseTableProps> = ({neighborhoodData}) => {
                 </td>
                 <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                   <p className="text-black dark:text-white">
-                    {neighborhoodItem.igorados ?? 0}
+                    {neighborhoodItem.igorados ?? neighborhoodItem.igorados ?? 0}
                   </p>
                 </td>
               </tr>

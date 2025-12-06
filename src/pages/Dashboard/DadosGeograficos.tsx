@@ -70,16 +70,24 @@ const App: React.FC = () => {
 
   const heatData = Array.isArray(affectedNeighborhoods) 
     ? affectedNeighborhoods
-        .map((neighborhood: { nomeBairro: string | number; casosReportados: any; }) => {
+        .map((neighborhood: { nomeBairro: string; casosReportados: number; }) => {
           if (!neighborhood || !neighborhood.nomeBairro) return null;
           
-          const coords = cordsNeighborhoods[neighborhood.nomeBairro];
-          if (!coords) return null;
+          const neighborhoodName = String(neighborhood.nomeBairro).toUpperCase().trim();
+          const coords = cordsNeighborhoods[neighborhoodName];
+          
+          if (!coords || !Array.isArray(coords) || coords.length !== 2) {
+            console.warn(`Coordenadas não encontradas para o bairro: ${neighborhoodName}`);
+            return null;
+          }
 
-          const intensidade = neighborhood.casosReportados ?? 0;
-          return [...coords, intensidade];
+          const intensidade = typeof neighborhood.casosReportados === 'number' 
+            ? neighborhood.casosReportados 
+            : 0;
+          
+          return [...coords, intensidade] as [number, number, number];
         })
-        .filter(Boolean)
+        .filter((item): item is [number, number, number] => item !== null)
     : [];
 
   return (
